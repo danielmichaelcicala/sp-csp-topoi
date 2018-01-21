@@ -1,0 +1,3180 @@
+% A bicategory of decorated cospans 
+% Kenny Courser
+% first arXiv version - May 24 2016
+
+\documentclass[oneside]{amsart}
+\usepackage{amssymb,amsmath,stmaryrd,txfonts,mathrsfs,amsthm}
+
+\usepackage[all,2cell]{xy}
+\usepackage[neveradjust]{paralist}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage[outline]{contour}
+\contourlength{1.2pt}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{xcolor}
+\usepackage{framed,color}
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,positioning}
+\usetikzlibrary{intersections,decorations.markings}
+\usetikzlibrary{arrows,positioning,fit,matrix,shapes.geometric,external}
+\usetikzlibrary{backgrounds,circuits,circuits.ee.IEC,shapes,fit,matrix}
+\makeatletter
+\let\ea\expandafter
+
+\definecolor{shadecolor}{rgb}{1,0.8,0.3}
+\definecolor{myurlcolor}{rgb}{0.6,0,0}
+\definecolor{mycitecolor}{rgb}{0,0,0.8}
+\definecolor{myrefcolor}{rgb}{0,0,0.8}
+\hypersetup{colorlinks, linkcolor=myrefcolor, citecolor=mycitecolor, urlcolor=myurlcolor}
+
+\tikzset{->-/.style={decoration={
+  markings,
+  mark=at position .5 with {\arrow{>}}},postaction={decorate}}}
+
+%% Defining commands that are always in math mode.
+\def\mdef#1#2{\ea\ea\ea\gdef\ea\ea\noexpand#1\ea{\ea\ensuremath\ea{#2}}}
+\def\alwaysmath#1{\ea\ea\ea\global\ea\ea\ea\let\ea\ea\csname your@#1\endcsname\csname #1\endcsname
+  \ea\def\csname #1\endcsname{\ensuremath{\csname your@#1\endcsname}}}
+
+\newcommand{\define}[1]{{\bf \boldmath{#1}}}
+
+% Script letters
+\newcommand{\sA}{\ensuremath{\mathscr{A}}}
+\newcommand{\sB}{\ensuremath{\mathscr{B}}}
+\newcommand{\sC}{\ensuremath{\mathscr{C}}}
+\newcommand{\sD}{\ensuremath{\mathscr{D}}}
+\newcommand{\sE}{\ensuremath{\mathscr{E}}}
+\newcommand{\sF}{\ensuremath{\mathscr{F}}}
+\newcommand{\sG}{\ensuremath{\mathscr{G}}}
+\newcommand{\sH}{\ensuremath{\mathscr{H}}}
+\newcommand{\sI}{\ensuremath{\mathscr{I}}}
+\newcommand{\sJ}{\ensuremath{\mathscr{J}}}
+\newcommand{\sK}{\ensuremath{\mathscr{K}}}
+\newcommand{\sL}{\ensuremath{\mathscr{L}}}
+\newcommand{\sM}{\ensuremath{\mathscr{M}}}
+\newcommand{\sN}{\ensuremath{\mathscr{N}}}
+\newcommand{\sO}{\ensuremath{\mathscr{O}}}
+\newcommand{\sP}{\ensuremath{\mathscr{P}}}
+\newcommand{\sQ}{\ensuremath{\mathscr{Q}}}
+\newcommand{\sR}{\ensuremath{\mathscr{R}}}
+\newcommand{\sS}{\ensuremath{\mathscr{S}}}
+\newcommand{\sT}{\ensuremath{\mathscr{T}}}
+\newcommand{\sU}{\ensuremath{\mathscr{U}}}
+\newcommand{\sV}{\ensuremath{\mathscr{V}}}
+\newcommand{\sW}{\ensuremath{\mathscr{W}}}
+\newcommand{\sX}{\ensuremath{\mathscr{X}}}
+\newcommand{\sY}{\ensuremath{\mathscr{Y}}}
+\newcommand{\sZ}{\ensuremath{\mathscr{Z}}}
+
+% Calligraphic letters
+\newcommand{\cA}{\ensuremath{\mathcal{A}}}
+\newcommand{\cB}{\ensuremath{\mathcal{B}}}
+\newcommand{\cC}{\ensuremath{\mathcal{C}}}
+\newcommand{\cD}{\ensuremath{\mathcal{D}}}
+\newcommand{\cE}{\ensuremath{\mathcal{E}}}
+\newcommand{\cF}{\ensuremath{\mathcal{F}}}
+\newcommand{\cG}{\ensuremath{\mathcal{G}}}
+\newcommand{\cH}{\ensuremath{\mathcal{H}}}
+\newcommand{\cI}{\ensuremath{\mathcal{I}}}
+\newcommand{\cJ}{\ensuremath{\mathcal{J}}}
+\newcommand{\cK}{\ensuremath{\mathcal{K}}}
+\newcommand{\cL}{\ensuremath{\mathcal{L}}}
+\newcommand{\cM}{\ensuremath{\mathcal{M}}}
+\newcommand{\cN}{\ensuremath{\mathcal{N}}}
+\newcommand{\cO}{\ensuremath{\mathcal{O}}}
+\newcommand{\cP}{\ensuremath{\mathcal{P}}}
+\newcommand{\cQ}{\ensuremath{\mathcal{Q}}}
+\newcommand{\cR}{\ensuremath{\mathcal{R}}}
+\newcommand{\cS}{\ensuremath{\mathcal{S}}}
+\newcommand{\cT}{\ensuremath{\mathcal{T}}}
+\newcommand{\cU}{\ensuremath{\mathcal{U}}}
+\newcommand{\cV}{\ensuremath{\mathcal{V}}}
+\newcommand{\cW}{\ensuremath{\mathcal{W}}}
+\newcommand{\cX}{\ensuremath{\mathcal{X}}}
+\newcommand{\cY}{\ensuremath{\mathcal{Y}}}
+\newcommand{\cZ}{\ensuremath{\mathcal{Z}}}
+
+% blackboard bold letters
+\newcommand{\lA}{\ensuremath{\mathbb{A}}}
+\newcommand{\lB}{\ensuremath{\mathbb{B}}}
+\newcommand{\lC}{\ensuremath{\mathbb{C}}}
+\newcommand{\lD}{\ensuremath{\mathbb{D}}}
+\newcommand{\lE}{\ensuremath{\mathbb{E}}}
+\newcommand{\lF}{\ensuremath{\mathbb{F}}}
+\newcommand{\lG}{\ensuremath{\mathbb{G}}}
+\newcommand{\lH}{\ensuremath{\mathbb{H}}}
+\newcommand{\lI}{\ensuremath{\mathbb{I}}}
+\newcommand{\lJ}{\ensuremath{\mathbb{J}}}
+\newcommand{\lK}{\ensuremath{\mathbb{K}}}
+\newcommand{\lL}{\ensuremath{\mathbb{L}}}
+\newcommand{\lM}{\ensuremath{\mathbb{M}}}
+\newcommand{\lN}{\ensuremath{\mathbb{N}}}
+\newcommand{\lO}{\ensuremath{\mathbb{O}}}
+\newcommand{\lP}{\ensuremath{\mathbb{P}}}
+\newcommand{\lQ}{\ensuremath{\mathbb{Q}}}
+\newcommand{\lR}{\ensuremath{\mathbb{R}}}
+\newcommand{\lS}{\ensuremath{\mathbb{S}}}
+\newcommand{\lT}{\ensuremath{\mathbb{T}}}
+\newcommand{\lU}{\ensuremath{\mathbb{U}}}
+\newcommand{\lV}{\ensuremath{\mathbb{V}}}
+\newcommand{\lW}{\ensuremath{\mathbb{W}}}
+\newcommand{\lX}{\ensuremath{\mathbb{X}}}
+\newcommand{\lY}{\ensuremath{\mathbb{Y}}}
+\newcommand{\lZ}{\ensuremath{\mathbb{Z}}}
+
+% bold letters
+\newcommand{\bA}{\ensuremath{\mathbf{A}}}
+\newcommand{\bB}{\ensuremath{\mathbf{B}}}
+\newcommand{\bC}{\ensuremath{\mathbf{C}}}
+\newcommand{\bD}{\ensuremath{\mathbf{D}}}
+\newcommand{\bE}{\ensuremath{\mathbf{E}}}
+\newcommand{\bF}{\ensuremath{\mathbf{F}}}
+\newcommand{\bG}{\ensuremath{\mathbf{G}}}
+\newcommand{\bH}{\ensuremath{\mathbf{H}}}
+\newcommand{\bI}{\ensuremath{\mathbf{I}}}
+\newcommand{\bJ}{\ensuremath{\mathbf{J}}}
+\newcommand{\bK}{\ensuremath{\mathbf{K}}}
+\newcommand{\bL}{\ensuremath{\mathbf{L}}}
+\newcommand{\bM}{\ensuremath{\mathbf{M}}}
+\newcommand{\bN}{\ensuremath{\mathbf{N}}}
+\newcommand{\bO}{\ensuremath{\mathbf{O}}}
+\newcommand{\bP}{\ensuremath{\mathbf{P}}}
+\newcommand{\bQ}{\ensuremath{\mathbf{Q}}}
+\newcommand{\bR}{\ensuremath{\mathbf{R}}}
+\newcommand{\bS}{\ensuremath{\mathbf{S}}}
+\newcommand{\bT}{\ensuremath{\mathbf{T}}}
+\newcommand{\bU}{\ensuremath{\mathbf{U}}}
+\newcommand{\bV}{\ensuremath{\mathbf{V}}}
+\newcommand{\bW}{\ensuremath{\mathbf{W}}}
+\newcommand{\bX}{\ensuremath{\mathbf{X}}}
+\newcommand{\bY}{\ensuremath{\mathbf{Y}}}
+\newcommand{\bZ}{\ensuremath{\mathbf{Z}}}
+
+% fraktur letters
+\newcommand{\fa}{\ensuremath{\mathfrak{a}}}
+\newcommand{\fb}{\ensuremath{\mathfrak{b}}}
+\newcommand{\fc}{\ensuremath{\mathfrak{c}}}
+\newcommand{\fd}{\ensuremath{\mathfrak{d}}}
+\newcommand{\fe}{\ensuremath{\mathfrak{e}}}
+\newcommand{\ff}{\ensuremath{\mathfrak{f}}}
+\newcommand{\fg}{\ensuremath{\mathfrak{g}}}
+\newcommand{\fh}{\ensuremath{\mathfrak{h}}}
+\newcommand{\fj}{\ensuremath{\mathfrak{j}}}
+\newcommand{\fk}{\ensuremath{\mathfrak{k}}}
+\newcommand{\fl}{\ensuremath{\mathfrak{l}}}
+\newcommand{\fm}{\ensuremath{\mathfrak{m}}}
+\newcommand{\fn}{\ensuremath{\mathfrak{n}}}
+\newcommand{\fo}{\ensuremath{\mathfrak{o}}}
+\newcommand{\fp}{\ensuremath{\mathfrak{p}}}
+\newcommand{\fq}{\ensuremath{\mathfrak{q}}}
+\newcommand{\fr}{\ensuremath{\mathfrak{r}}}
+\newcommand{\fs}{\ensuremath{\mathfrak{s}}}
+\newcommand{\ft}{\ensuremath{\mathfrak{t}}}
+\newcommand{\fu}{\ensuremath{\mathfrak{u}}}
+\newcommand{\fv}{\ensuremath{\mathfrak{v}}}
+\newcommand{\fw}{\ensuremath{\mathfrak{w}}}
+\newcommand{\fx}{\ensuremath{\mathfrak{x}}}
+\newcommand{\fy}{\ensuremath{\mathfrak{y}}}
+\newcommand{\fz}{\ensuremath{\mathfrak{z}}}
+
+\mdef\fahat{\hat{\fa}}
+
+% Underline letters
+\newcommand{\uA}{\ensuremath{\underline{A}}}
+\newcommand{\uB}{\ensuremath{\underline{B}}}
+\newcommand{\uC}{\ensuremath{\underline{C}}}
+\newcommand{\uD}{\ensuremath{\underline{D}}}
+\newcommand{\uE}{\ensuremath{\underline{E}}}
+\newcommand{\uF}{\ensuremath{\underline{F}}}
+\newcommand{\uG}{\ensuremath{\underline{G}}}
+\newcommand{\uH}{\ensuremath{\underline{H}}}
+\newcommand{\uI}{\ensuremath{\underline{I}}}
+\newcommand{\uJ}{\ensuremath{\underline{J}}}
+\newcommand{\uK}{\ensuremath{\underline{K}}}
+\newcommand{\uL}{\ensuremath{\underline{L}}}
+\newcommand{\uM}{\ensuremath{\underline{M}}}
+\newcommand{\uN}{\ensuremath{\underline{N}}}
+\newcommand{\uO}{\ensuremath{\underline{O}}}
+\newcommand{\uP}{\ensuremath{\underline{P}}}
+\newcommand{\uQ}{\ensuremath{\underline{Q}}}
+\newcommand{\uR}{\ensuremath{\underline{R}}}
+\newcommand{\uS}{\ensuremath{\underline{S}}}
+\newcommand{\uT}{\ensuremath{\underline{T}}}
+\newcommand{\uU}{\ensuremath{\underline{U}}}
+\newcommand{\uV}{\ensuremath{\underline{V}}}
+\newcommand{\uW}{\ensuremath{\underline{W}}}
+\newcommand{\uX}{\ensuremath{\underline{X}}}
+\newcommand{\uY}{\ensuremath{\underline{Y}}}
+\newcommand{\uZ}{\ensuremath{\underline{Z}}}
+
+% bars
+\newcommand{\Abar}{\ensuremath{\overline{A}}}
+\newcommand{\Bbar}{\ensuremath{\overline{B}}}
+\newcommand{\Cbar}{\ensuremath{\overline{C}}}
+\newcommand{\Dbar}{\ensuremath{\overline{D}}}
+\newcommand{\Ebar}{\ensuremath{\overline{E}}}
+\newcommand{\Fbar}{\ensuremath{\overline{F}}}
+\newcommand{\Gbar}{\ensuremath{\overline{G}}}
+\newcommand{\Hbar}{\ensuremath{\overline{H}}}
+\newcommand{\Ibar}{\ensuremath{\overline{I}}}
+\newcommand{\Jbar}{\ensuremath{\overline{J}}}
+\newcommand{\Kbar}{\ensuremath{\overline{K}}}
+\newcommand{\Lbar}{\ensuremath{\overline{L}}}
+\newcommand{\Mbar}{\ensuremath{\overline{M}}}
+\newcommand{\Nbar}{\ensuremath{\overline{N}}}
+\newcommand{\Obar}{\ensuremath{\overline{O}}}
+\newcommand{\Pbar}{\ensuremath{\overline{P}}}
+\newcommand{\Qbar}{\ensuremath{\overline{Q}}}
+\newcommand{\Rbar}{\ensuremath{\overline{R}}}
+\newcommand{\Sbar}{\ensuremath{\overline{S}}}
+\newcommand{\Tbar}{\ensuremath{\overline{T}}}
+\newcommand{\Ubar}{\ensuremath{\overline{U}}}
+\newcommand{\Vbar}{\ensuremath{\overline{V}}}
+\newcommand{\Wbar}{\ensuremath{\overline{W}}}
+\newcommand{\Xbar}{\ensuremath{\overline{X}}}
+\newcommand{\Ybar}{\ensuremath{\overline{Y}}}
+\newcommand{\Zbar}{\ensuremath{\overline{Z}}}
+\newcommand{\abar}{\ensuremath{\overline{a}}}
+\newcommand{\bbar}{\ensuremath{\overline{b}}}
+\newcommand{\cbar}{\ensuremath{\overline{c}}}
+\newcommand{\dbar}{\ensuremath{\overline{d}}}
+\newcommand{\ebar}{\ensuremath{\overline{e}}}
+\newcommand{\fbar}{\ensuremath{\overline{f}}}
+\newcommand{\gbar}{\ensuremath{\overline{g}}}
+%\newcommand{\hbar}{\ensuremath{\overline{h}}} % whoops, \hbar means something else!
+\newcommand{\ibar}{\ensuremath{\overline{\imath}}}
+\newcommand{\jbar}{\ensuremath{\overline{\jmath}}}
+\newcommand{\kbar}{\ensuremath{\overline{k}}}
+\newcommand{\lbar}{\ensuremath{\overline{l}}}
+\newcommand{\mbar}{\ensuremath{\overline{m}}}
+\newcommand{\nbar}{\ensuremath{\overline{n}}}
+%\newcommand{\obar}{\ensuremath{\overline{o}}}
+\newcommand{\pbar}{\ensuremath{\overline{p}}}
+\newcommand{\qbar}{\ensuremath{\overline{q}}}
+\newcommand{\rbar}{\ensuremath{\overline{r}}}
+\newcommand{\sbar}{\ensuremath{\overline{s}}}
+\newcommand{\tbar}{\ensuremath{\overline{t}}}
+\newcommand{\ubar}{\ensuremath{\overline{u}}}
+\newcommand{\vbar}{\ensuremath{\overline{v}}}
+\newcommand{\wbar}{\ensuremath{\overline{w}}}
+\newcommand{\xbar}{\ensuremath{\overline{x}}}
+\newcommand{\ybar}{\ensuremath{\overline{y}}}
+\newcommand{\zbar}{\ensuremath{\overline{z}}}
+
+% tildes
+\newcommand{\Atil}{\ensuremath{\widetilde{A}}}
+\newcommand{\Btil}{\ensuremath{\widetilde{B}}}
+\newcommand{\Ctil}{\ensuremath{\widetilde{C}}}
+\newcommand{\Dtil}{\ensuremath{\widetilde{D}}}
+\newcommand{\Etil}{\ensuremath{\widetilde{E}}}
+\newcommand{\Ftil}{\ensuremath{\widetilde{F}}}
+\newcommand{\Gtil}{\ensuremath{\widetilde{G}}}
+\newcommand{\Htil}{\ensuremath{\widetilde{H}}}
+\newcommand{\Itil}{\ensuremath{\widetilde{I}}}
+\newcommand{\Jtil}{\ensuremath{\widetilde{J}}}
+\newcommand{\Ktil}{\ensuremath{\widetilde{K}}}
+\newcommand{\Ltil}{\ensuremath{\widetilde{L}}}
+\newcommand{\Mtil}{\ensuremath{\widetilde{M}}}
+\newcommand{\Ntil}{\ensuremath{\widetilde{N}}}
+\newcommand{\Otil}{\ensuremath{\widetilde{O}}}
+\newcommand{\Ptil}{\ensuremath{\widetilde{P}}}
+\newcommand{\Qtil}{\ensuremath{\widetilde{Q}}}
+\newcommand{\Rtil}{\ensuremath{\widetilde{R}}}
+\newcommand{\Stil}{\ensuremath{\widetilde{S}}}
+\newcommand{\Ttil}{\ensuremath{\widetilde{T}}}
+\newcommand{\Util}{\ensuremath{\widetilde{U}}}
+\newcommand{\Vtil}{\ensuremath{\widetilde{V}}}
+\newcommand{\Wtil}{\ensuremath{\widetilde{W}}}
+\newcommand{\Xtil}{\ensuremath{\widetilde{X}}}
+\newcommand{\Ytil}{\ensuremath{\widetilde{Y}}}
+\newcommand{\Ztil}{\ensuremath{\widetilde{Z}}}
+\newcommand{\atil}{\ensuremath{\widetilde{a}}}
+\newcommand{\btil}{\ensuremath{\widetilde{b}}}
+\newcommand{\ctil}{\ensuremath{\widetilde{c}}}
+\newcommand{\dtil}{\ensuremath{\widetilde{d}}}
+\newcommand{\etil}{\ensuremath{\widetilde{e}}}
+\newcommand{\ftil}{\ensuremath{\widetilde{f}}}
+\newcommand{\gtil}{\ensuremath{\widetilde{g}}}
+\newcommand{\htil}{\ensuremath{\widetilde{h}}}
+\newcommand{\itil}{\ensuremath{\widetilde{\imath}}}
+\newcommand{\jtil}{\ensuremath{\widetilde{\jmath}}}
+\newcommand{\ktil}{\ensuremath{\widetilde{k}}}
+\newcommand{\ltil}{\ensuremath{\widetilde{l}}}
+\newcommand{\mtil}{\ensuremath{\widetilde{m}}}
+\newcommand{\ntil}{\ensuremath{\widetilde{n}}}
+\newcommand{\otil}{\ensuremath{\widetilde{o}}}
+\newcommand{\ptil}{\ensuremath{\widetilde{p}}}
+\newcommand{\qtil}{\ensuremath{\widetilde{q}}}
+\newcommand{\rtil}{\ensuremath{\widetilde{r}}}
+\newcommand{\stil}{\ensuremath{\widetilde{s}}}
+\newcommand{\ttil}{\ensuremath{\widetilde{t}}}
+\newcommand{\util}{\ensuremath{\widetilde{u}}}
+\newcommand{\vtil}{\ensuremath{\widetilde{v}}}
+\newcommand{\wtil}{\ensuremath{\widetilde{w}}}
+\newcommand{\xtil}{\ensuremath{\widetilde{x}}}
+\newcommand{\ytil}{\ensuremath{\widetilde{y}}}
+\newcommand{\ztil}{\ensuremath{\widetilde{z}}}
+
+% Hats
+\newcommand{\Ahat}{\ensuremath{\widehat{A}}}
+\newcommand{\Bhat}{\ensuremath{\widehat{B}}}
+\newcommand{\Chat}{\ensuremath{\widehat{C}}}
+\newcommand{\Dhat}{\ensuremath{\widehat{D}}}
+\newcommand{\Ehat}{\ensuremath{\widehat{E}}}
+\newcommand{\Fhat}{\ensuremath{\widehat{F}}}
+\newcommand{\Ghat}{\ensuremath{\widehat{G}}}
+\newcommand{\Hhat}{\ensuremath{\widehat{H}}}
+\newcommand{\Ihat}{\ensuremath{\widehat{I}}}
+\newcommand{\Jhat}{\ensuremath{\widehat{J}}}
+\newcommand{\Khat}{\ensuremath{\widehat{K}}}
+\newcommand{\Lhat}{\ensuremath{\widehat{L}}}
+\newcommand{\Mhat}{\ensuremath{\widehat{M}}}
+\newcommand{\Nhat}{\ensuremath{\widehat{N}}}
+\newcommand{\Ohat}{\ensuremath{\widehat{O}}}
+\newcommand{\Phat}{\ensuremath{\widehat{P}}}
+\newcommand{\Qhat}{\ensuremath{\widehat{Q}}}
+\newcommand{\Rhat}{\ensuremath{\widehat{R}}}
+\newcommand{\Shat}{\ensuremath{\widehat{S}}}
+\newcommand{\That}{\ensuremath{\widehat{T}}}
+\newcommand{\Uhat}{\ensuremath{\widehat{U}}}
+\newcommand{\Vhat}{\ensuremath{\widehat{V}}}
+\newcommand{\What}{\ensuremath{\widehat{W}}}
+\newcommand{\Xhat}{\ensuremath{\widehat{X}}}
+\newcommand{\Yhat}{\ensuremath{\widehat{Y}}}
+\newcommand{\Zhat}{\ensuremath{\widehat{Z}}}
+\newcommand{\ahat}{\ensuremath{\hat{a}}}
+\newcommand{\bhat}{\ensuremath{\hat{b}}}
+\newcommand{\chat}{\ensuremath{\hat{c}}}
+\newcommand{\dhat}{\ensuremath{\hat{d}}}
+\newcommand{\ehat}{\ensuremath{\hat{e}}}
+\newcommand{\fhat}{\ensuremath{\hat{f}}}
+\newcommand{\ghat}{\ensuremath{\hat{g}}}
+\newcommand{\hhat}{\ensuremath{\hat{h}}}
+\newcommand{\ihat}{\ensuremath{\hat{\imath}}}
+\newcommand{\jhat}{\ensuremath{\hat{\jmath}}}
+\newcommand{\khat}{\ensuremath{\hat{k}}}
+\newcommand{\lhat}{\ensuremath{\hat{l}}}
+\newcommand{\mhat}{\ensuremath{\hat{m}}}
+\newcommand{\nhat}{\ensuremath{\hat{n}}}
+\newcommand{\ohat}{\ensuremath{\hat{o}}}
+\newcommand{\phat}{\ensuremath{\hat{p}}}
+\newcommand{\qhat}{\ensuremath{\hat{q}}}
+\newcommand{\rhat}{\ensuremath{\hat{r}}}
+\newcommand{\shat}{\ensuremath{\hat{s}}}
+\newcommand{\that}{\ensuremath{\hat{t}}}
+\newcommand{\uhat}{\ensuremath{\hat{u}}}
+\newcommand{\vhat}{\ensuremath{\hat{v}}}
+\newcommand{\what}{\ensuremath{\hat{w}}}
+\newcommand{\xhat}{\ensuremath{\hat{x}}}
+\newcommand{\yhat}{\ensuremath{\hat{y}}}
+\newcommand{\zhat}{\ensuremath{\hat{z}}}
+
+%% FONTS AND DECORATION FOR GREEK LETTERS
+
+%% the package `mathbbol' gives us blackboard bold greek and numbers,
+%% but it does it by redefining \mathbb to use a different font, so that
+%% all the other \mathbb letters look different too.  Here we import the
+%% font with bb greek and numbers, but assign it a different name,
+%% \mathbbb, so as not to replace the usual one.
+\DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
+\DeclareSymbolFontAlphabet{\mathbbb}{bbold}
+\newcommand{\bbDelta}{\ensuremath{\mathbbb{\Delta}}}
+\newcommand{\bbone}{\ensuremath{\mathbbb{1}}}
+\newcommand{\bbtwo}{\ensuremath{\mathbbb{2}}}
+\newcommand{\bbthree}{\ensuremath{\mathbbb{3}}}
+
+% greek with bars
+\newcommand{\albar}{\ensuremath{\overline{\alpha}}}
+\newcommand{\bebar}{\ensuremath{\overline{\beta}}}
+\newcommand{\gmbar}{\ensuremath{\overline{\gamma}}}
+\newcommand{\debar}{\ensuremath{\overline{\delta}}}
+\newcommand{\phibar}{\ensuremath{\overline{\varphi}}}
+\newcommand{\psibar}{\ensuremath{\overline{\psi}}}
+\newcommand{\xibar}{\ensuremath{\overline{\xi}}}
+\newcommand{\ombar}{\ensuremath{\overline{\omega}}}
+
+% greek with hats
+\newcommand{\alhat}{\ensuremath{\hat{\alpha}}}
+\newcommand{\behat}{\ensuremath{\hat{\beta}}}
+\newcommand{\gmhat}{\ensuremath{\hat{\gamma}}}
+\newcommand{\dehat}{\ensuremath{\hat{\delta}}}
+
+% greek with checks
+\newcommand{\alchk}{\ensuremath{\check{\alpha}}}
+\newcommand{\bechk}{\ensuremath{\check{\beta}}}
+\newcommand{\gmchk}{\ensuremath{\check{\gamma}}}
+\newcommand{\dechk}{\ensuremath{\check{\delta}}}
+
+% greek with tildes
+\newcommand{\altil}{\ensuremath{\widetilde{\alpha}}}
+\newcommand{\betil}{\ensuremath{\widetilde{\beta}}}
+\newcommand{\gmtil}{\ensuremath{\widetilde{\gamma}}}
+\newcommand{\phitil}{\ensuremath{\widetilde{\varphi}}}
+\newcommand{\psitil}{\ensuremath{\widetilde{\psi}}}
+\newcommand{\xitil}{\ensuremath{\widetilde{\xi}}}
+\newcommand{\omtil}{\ensuremath{\widetilde{\omega}}}
+
+% MISCELLANEOUS SYMBOLS
+\mdef\del{\partial}
+\mdef\delbar{\overline{\partial}}
+\let\sm\wedge
+\newcommand{\dd}[1]{\ensuremath{\frac{\partial}{\partial {#1}}}}
+\newcommand{\inv}{^{-1}}
+\newcommand{\dual}{^{\vee}}
+\mdef\hf{\textstyle\frac{1}{2}}
+\mdef\thrd{\textstyle\frac{1}{3}}
+\mdef\qtr{\textstyle\frac{1}{4}}
+\let\meet\wedge
+\let\join\vee
+\let\dn\downarrow
+\newcommand{\op}{^{\mathit{op}}}
+\newcommand{\co}{^{\mathit{co}}}
+\newcommand{\coop}{^{\mathit{coop}}}
+\newcommand{\id}{\mathm{id}}
+\let\adj\dashv
+\SelectTips{cm}{}
+\newdir{ >}{{}*!/-10pt/@{>}}    % extra spacing for tail arrows in XYpic
+\newcommand{\pushoutcorner}[1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
+\newcommand{\pullbackcorner}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
+\let\iso\cong
+\let\eqv\simeq
+\let\cng\equiv
+\mdef\Id{\mathrm{Id}}
+\mdef\id{\mathrm{id}}
+\alwaysmath{ell}
+\alwaysmath{infty}
+\alwaysmath{odot}
+\def\frc#1/#2.{\frac{#1}{#2}}   % \frc x^2+1 / x^2-1 .
+\mdef\ten{\mathrel{\otimes}}
+\mdef\bigten{\bigotimes}
+\mdef\sqten{\mathrel{\boxtimes}}
+\def\pow(#1,#2){\mathop{\pitchfork}(#1,#2)} % powers and
+\def\cpw{\mathop{\odot}}                    % copowers
+
+%% OPERATORS
+\DeclareMathOperator\lan{Lan}
+\DeclareMathOperator\ran{Ran}
+\DeclareMathOperator\colim{colim}
+\DeclareMathOperator\coeq{coeq}
+\DeclareMathOperator\eq{eq}
+\DeclareMathOperator\Tot{Tot}
+\DeclareMathOperator\cosk{cosk}
+\DeclareMathOperator\sk{sk}
+\DeclareMathOperator\im{im}
+\DeclareMathOperator\Spec{Spec}
+\DeclareMathOperator\Ho{Ho}
+\DeclareMathOperator\Aut{Aut}
+\DeclareMathOperator\End{End}
+\DeclareMathOperator\Hom{Hom}
+\DeclareMathOperator\Map{Map}
+
+%% ARROWS
+% \to already exists
+\newcommand{\too}[1][]{\ensuremath{\overset{#1}{\longrightarrow}}}
+\newcommand{\ot}{\ensuremath{\leftarrow}}
+\newcommand{\oot}[1][]{\ensuremath{\overset{#1}{\longleftarrow}}}
+\let\toot\rightleftarrows
+\let\otto\leftrightarrows
+\let\Impl\Rightarrow
+\let\imp\Rightarrow
+\let\toto\rightrightarrows
+\let\into\hookrightarrow
+\let\xinto\xhookrightarrow
+\mdef\we{\overset{\sim}{\longrightarrow}}
+\mdef\leftwe{\overset{\sim}{\longleftarrow}}
+\let\mono\rightarrowtail
+\let\leftmono\leftarrowtail
+\let\cof\rightarrowtail
+\let\leftcof\leftarrowtail
+\let\epi\twoheadrightarrow
+\let\leftepi\twoheadleftarrow
+\let\fib\twoheadrightarrow
+\let\leftfib\twoheadleftarrow
+\let\cohto\rightsquigarrow
+\let\maps\colon
+\newcommand{\spam}{\,:\!}       % \maps for left arrows
+
+%% EXTENSIBLE ARROWS
+\let\xto\xrightarrow
+\let\xot\xleftarrow
+% See Voss' Mathmode.tex for instructions on how to create new
+% extensible arrows.
+\def\rightarrowtailfill@{\arrowfill@{\Yright\joinrel\relbar}\relbar\rightarrow}
+\newcommand\xrightarrowtail[2][]{\ext@arrow 0055{\rightarrowtailfill@}{#1}{#2}}
+\let\xmono\xrightarrowtail
+\let\xcof\xrightarrowtail
+\def\twoheadrightarrowfill@{\arrowfill@{\relbar\joinrel\relbar}\relbar\twoheadrightarrow}
+\newcommand\xtwoheadrightarrow[2][]{\ext@arrow 0055{\twoheadrightarrowfill@}{#1}{#2}}
+\let\xepi\xtwoheadrightarrow
+\let\xfib\xtwoheadrightarrow
+% Let's leave the left-going ones until I need them.
+
+%% EXTENSIBLE SLASHED ARROWS
+% Making extensible slashed arrows, by modifying the underlying AMS code.
+% Arguments are:
+% 1 = arrowhead on the left (\relbar or \Relbar if none)
+% 2 = fill character (usually \relbar or \Relbar)
+% 3 = slash character (such as \mapstochar or \Mapstochar)
+% 4 = arrowhead on the left (\relbar or \Relbar if none)
+% 5 = display mode (\displaystyle etc)
+\def\slashedarrowfill@#1#2#3#4#5{%
+  $\m@th\thickmuskip0mu\medmuskip\thickmuskip\thinmuskip\thickmuskip
+   \relax#5#1\mkern-7mu%
+   \cleaders\hbox{$#5\mkern-2mu#2\mkern-2mu$}\hfill
+   \mathclap{#3}\mathclap{#2}%
+   \cleaders\hbox{$#5\mkern-2mu#2\mkern-2mu$}\hfill
+   \mkern-7mu#4$%
+}
+% Here's the idea: \<slashed>arrowfill@ should be a box containing
+% some stretchable space that is the "middle of the arrow".  This
+% space is created as a "leader" using \cleader<thing>\hfill, which
+% fills an \hfill of space with copies of <thing>.  Here instead of
+% just one \cleader, we use two, with the slash in between (and an
+% extra copy of the filler, to avoid extra space around the slash).
+\def\rightslashedarrowfill@{%
+  \slashedarrowfill@\relbar\relbar\mapstochar\rightarrow}
+\newcommand\xslashedrightarrow[2][]{%
+  \ext@arrow 0055{\rightslashedarrowfill@}{#1}{#2}}
+\mdef\hto{\xslashedrightarrow{}}
+\mdef\htoo{\xslashedrightarrow{\quad}}
+\let\xhto\xslashedrightarrow
+
+%% To get a slashed arrow in XYpic, do
+% \[\xymatrix{A \ar[r]|-@{|} & B}\]
+
+% ISOMORPHISMS
+\def\xiso#1{\mathrel{\mathrlap{\smash{\xto[\smash{\raisebox{1.3mm}{$\scriptstyle\sim$}}]{#1}}}\hphantom{\xto{#1}}}}
+\def\toiso{\xto{\smash{\raisebox{-.5mm}{$\scriptstyle\sim$}}}}
+
+% SHADOWS
+\def\shvar#1#2{{\ensuremath{%
+  \hspace{1mm}\makebox[-1mm]{$#1\langle$}\makebox[0mm]{$#1\langle$}\hspace{1mm}%
+  {#2}%
+  \makebox[1mm]{$#1\rangle$}\makebox[0mm]{$#1\rangle$}%
+}}}
+\def\sh{\shvar{}}
+\def\scriptsh{\shvar{\scriptstyle}}
+\def\bigsh{\shvar{\big}}
+\def\Bigsh{\shvar{\Big}}
+\def\biggsh{\shvar{\bigg}}
+\def\Biggsh{\shvar{\Bigg}}
+
+% THEOREM-TYPE ENVIRONMENTS, hacked to
+%% (a) number all with the same numbers, and
+%% (b) have the right names for autoref
+\def\defthm#1#2{%
+  \newtheorem{#1}{#2}[section]%
+  \expandafter\def\csname #1autorefname\endcsname{#2}%
+  \expandafter\let\csname c@#1\endcsname\c@thm}
+\newtheorem{thm}{Theorem}[section]
+\newcommand{\thmautorefname}{Theorem}
+\defthm{cor}{Corollary}
+\defthm{prop}{Proposition}
+\defthm{lem}{Lemma}
+\defthm{sch}{Scholium}
+\defthm{assume}{Assumption}
+\defthm{claim}{Claim}
+\defthm{conj}{Conjecture}
+\defthm{hyp}{Hypothesis}
+\defthm{fact}{Fact}
+\theoremstyle{definition}
+\defthm{defn}{Definition}
+\defthm{notn}{Notation}
+\theoremstyle{remark}
+\defthm{rmk}{Remark}
+\defthm{eg}{Example}
+\defthm{egs}{Examples}
+\defthm{ex}{Exercise}
+\defthm{ceg}{Counterexample}
+
+% How to get QED symbols inside equations at the end of the statements
+% of theorems.  AMS LaTeX knows how to do this inside equations at the
+% end of *proofs* with \qedhere, and at the end of the statement of a
+% theorem with \qed (meaning no proof will be given), but it can't
+% seem to combine the two.  Use this instead.
+\def\thmqedhere{\expandafter\csname\csname @currenvir\endcsname @qed\endcsname}
+
+% Number numbered lists as (i), (ii), ...
+\renewcommand{\theenumi}{(\roman{enumi})}
+\renewcommand{\labelenumi}{\theenumi}
+
+%% Labeling that keeps track of theorem-type names.  Superseded by
+%% autoref from hyperref, as above, but we keep this in case we are
+%% using a journal style file that is incompatible with hyperref.
+% 
+% \ifx\SK@label\undefined\let\SK@label\label\fi
+% \let\your@thm\@thm
+% \def\@thm#1#2#3{\gdef\currthmtype{#3}\your@thm{#1}{#2}{#3}}
+% \def\xlabel#1{{\let\your@currentlabel\@currentlabel\def\@currentlabel
+% {\currthmtype~\your@currentlabel}
+% \SK@label{#1@}}\label{#1}}
+% \def\xref#1{\ref{#1@}}
+
+% Also number formulas with the theorem counter
+\let\c@equation\c@thm
+\numberwithin{equation}{section}
+
+% Only show numbers for equations that are actually referenced (or
+% whose tags are specified manually) - uses mathtools.
+\mathtoolsset{showonlyrefs,showmanualtags}
+
+%% Fix enumerate spacing with paralist.  This has two parts:
+%%   1. enable mixing of "old spacing" lists with those adjusted by paralist
+%%   2. allow us to specify a number based on which to adjust the spacing
+%% For the first, use \killspacingtrue when you want the spacing
+%% adjusted, then \killspacingfalse to turn adjustment off.  For the
+%% second, use \maxenum=14 to set the widest number you want the
+%% spacing to be calculated with.
+\newlength\oldleftmargini       % save old spacing
+\newlength\oldleftmarginii
+\newlength\oldleftmarginiii
+\newlength\oldleftmarginiv
+\newlength\oldleftmarginv
+\newlength\oldleftmarginvi
+\newcount\maxenum
+\maxenum=7
+\newif\ifkillspacing
+\def\@adjust@enum@labelwidth{%
+  \advance\@listdepth by 1\relax
+  \ifkillspacing                % do the paralist thing
+    \csname c@\@enumctr\endcsname\maxenum
+    \settowidth{\@tempdima}{%
+      \csname label\@enumctr\endcsname\hspace{\labelsep}}%
+    \csname leftmargin\romannumeral\@listdepth\endcsname
+      \@tempdima
+  \else                         % otherwise, reset it
+    \csname fixspacing\romannumeral\@listdepth\endcsname
+  \fi
+  \advance\@listdepth by -1\relax}
+% these commands, one for each enum level (I couldn't get a generic
+% one to work), test whether oldleftmargin has been set yet, and if
+% not, set it from leftmargin; otherwise, they reset leftmargin to
+% it.  Just setting oldleftmargin to leftmargin in the preamble
+% doesn't seem to work.
+\def\fixspacingi{\ifnum\oldleftmargini=0\setlength\oldleftmargini\leftmargini\else\setlength\leftmargini\oldleftmargini\fi}
+\def\fixspacingii{\ifnum\oldleftmarginii=0\setlength\oldleftmarginii\leftmarginii\else\setlength\leftmarginii\oldleftmarginii\fi}
+\def\fixspacingiii{\ifnum\oldleftmarginiii=0\setlength\oldleftmarginiii\leftmarginiii\else\setlength\leftmarginiii\oldleftmarginiii\fi}
+\def\fixspacingiv{\ifnum\oldleftmarginiv=0\setlength\oldleftmarginiv\leftmarginiv\else\setlength\leftmarginiv\oldleftmarginiv\fi}
+\def\fixspacingv{\ifnum\oldleftmarginv=0\setlength\oldleftmarginv\leftmarginv\else\setlength\leftmarginv\oldleftmarginv\fi}
+\def\fixspacingvi{\ifnum\oldleftmarginvi=0\setlength\oldleftmarginvi\leftmarginvi\else\setlength\leftmarginvi\oldleftmarginvi\fi}
+
+%% Fix paralist references, so that we can refer to (1) instead of
+%% just 1.
+\def\pl@label#1#2{%
+  \edef\pl@the{\noexpand#1{\@enumctr}}%
+  \pl@lab\expandafter{\the\pl@lab\csname yourthe\@enumctr\endcsname}%
+  \advance\@tempcnta1
+  \pl@loop}
+\def\@enumlabel@#1[#2]{%
+  \@plmylabeltrue
+  \@tempcnta0
+  \pl@lab{}%
+  \let\pl@the\pl@qmark
+  \expandafter\pl@loop\@gobble#2\@@@
+  \ifnum\@tempcnta=1\else
+    \PackageWarning{paralist}{Incorrect label; no or multiple
+      counters.\MessageBreak The label is: \@gobble#2}%
+  \fi
+  \expandafter\edef\csname label\@enumctr\endcsname{\the\pl@lab}%
+  \expandafter\edef\csname the\@enumctr\endcsname{\the\pl@lab}%
+  \expandafter\let\csname yourthe\@enumctr\endcsname\pl@the
+  #1}
+
+
+% GREEK LETTERS, ETC.
+\alwaysmath{alpha}
+\alwaysmath{beta}
+\alwaysmath{gamma}
+\alwaysmath{Gamma}
+\alwaysmath{delta}
+\alwaysmath{Delta}
+\alwaysmath{epsilon}
+\mdef\ep{\varepsilon}
+\alwaysmath{zeta}
+\alwaysmath{eta}
+\alwaysmath{theta}
+\alwaysmath{Theta}
+\alwaysmath{iota}
+\alwaysmath{kappa}
+\alwaysmath{lambda}
+\alwaysmath{Lambda}
+\alwaysmath{mu}
+\alwaysmath{nu}
+\alwaysmath{xi}
+\alwaysmath{pi}
+\alwaysmath{rho}
+\alwaysmath{sigma}
+\alwaysmath{Sigma}
+\alwaysmath{tau}
+\alwaysmath{upsilon}
+\alwaysmath{Upsilon}
+\alwaysmath{phi}
+\alwaysmath{Pi}
+\alwaysmath{Phi}
+\mdef\ph{\varphi}
+\alwaysmath{chi}
+\alwaysmath{psi}
+\alwaysmath{Psi}
+\alwaysmath{omega}
+\alwaysmath{Omega}
+\let\al\alpha
+\let\be\beta
+\let\gm\gamma
+\let\Gm\Gamma
+\let\de\delta
+\let\De\Delta
+\let\si\sigma
+\let\Si\Sigma
+\let\om\omega
+\let\ka\kappa
+\let\la\lambda
+\let\La\Lambda
+\let\ze\zeta
+\let\th\theta
+\let\Th\Theta
+\let\vth\vartheta
+
+\makeatother
+
+% Local Variables:
+% mode: latex
+% TeX-master: ""
+% End:
+
+
+
+%\input{decls}
+\UseAllTwocells
+\title{Bicategories of spans and cospans}
+\author{Daniel Cicala}
+\author{Kenny Courser}
+\mdef\cMod{\mathcal{M}\mathit{od}}
+\mdef\cCat{\mathcal{C}\mathit{at}}
+\mdef\cTwocat{2\text{-}\mathcal{C}\mathit{at}}
+\mdef\cBicat{\mathcal{B}\mathit{icat}}
+\mdef\lMod{\mathbb{M}\mathsf{od}}
+\mdef\lnCob{n\mathbb{C}\mathsf{ob}}
+\mdef\lProf{\mathbb{P}\mathsf{rof}}
+\mdef\cDbl{\mathcal{D}\mathit{bl}}
+\mdef\fchk{\check{f}}
+\mdef\conj{\Yleft}
+\mdef\Conj{\mathcal{C}\mathit{onj}}
+
+\begin{document}
+\maketitle
+\begin{center}   
+  %{\bf A bicategory of decorated cospans \\}   
+  %\vspace{0.3cm}
+  %{\em Kenny Courser \\}
+  %\vspace{0.3cm}
+  {\small Department of Mathematics  \\
+    University of California  \\
+  Riverside CA, USA 92521  \\ }
+  \vspace{0.3cm}   
+  {\small email: cicala@math.ucr.edu\\}
+  {\small email: courser@math.ucr.edu\\} 
+  \vspace{0.3cm}   
+  {\small \today}
+  \vspace{0.3cm}   
+\end{center}   
+
+\begin{abstract}
+\noindent
+If $\bold{C}$ is a topos then $\bold{C}$ has two monoidal structures given by $(\bold{C},+,0)$ and $(\bold{C},\times,1)$ for initial and terminal objects $0$ and $1$, respectively. Having finite colimits and limits allows us to take both pushouts and pullbacks of adjacent cospans and spans, respectively. Using a result of Shulman, we construct a collection of various symmetric monoidal bicategories whose objects are that of the category $\bold{C}$, morphisms are spans or cospans in the category $\bold{C}$, and 2-morphisms are diagrams built out of combinations of spans and cospans.
+\end{abstract}
+
+\section{Introduction}
+Category theory for the sake of category theory is perfectly fine. Enjoy this paper! (Also, maybe say some stuff about graph rewrite rules or something here...)
+
+\section{Overview}
+The goal of this paper is to construct the following symmetric monoidal bicategories. See \cite{Stay} for the definition of symmetric monoidal bicategory.
+\begin{enumerate}
+\item{The symmetric monoidal bicategory $\bold{Sp(C)}$ whose objects are that of $\bold{C}$, morphisms are spans in $\bold{C}$ and 2-morphisms are maps of spans in $\bold{C}$, which are diagrams of the form:
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,0.5) {$a$};
+\node (B) at (2,1) {$c$};
+\node (C) at (3,0.5) {$b$};
+\node (B') at (2,0) {$c'$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A)
+(B') edge node[above]{$$} (A)
+(B) edge node[above]{$$} (C)
+(B') edge node[above]{$$} (C)
+(B) edge node[left]{$$} (B');
+\end{tikzpicture}
+\]
+This actually follows immediately from \cite{Cour} where it follows that $\bold{Csp(C)}$ is a symmetric monoidal bicategory after constructing a suitable fibrant symmetric monoidal double category and applying the theorem of Shulman \cite{Shul}. It is also shown in \cite{Reb} with great detail that $\bold{Sp(C)}$ is a bicategory when $\bold{C}$ has pullbacks.
+}
+\item{The symmetric monoidal bicategory $\bold{MonicSp(Csp(C))}$ whose objects are that of $\bold{C}$, morphisms are cospans in $\bold{C}$ and 2-morphisms are isomorphism classes of spans of cospans with the morphisms of the inner spans being monomorphisms such as in the following diagram:
+\[
+\begin{tikzpicture}[scale=1.5]
+
+\node (B) at (2,1) {$c$};
+
+\node (A) at (1,0) {$a$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b$};
+
+\node (E) at (2,-1) {$c''$};
+
+\path[->,font=\scriptsize,>=angle 90]
+(A)edge node[above]{$$}(B')
+(A)edge node[above]{$$}(E)
+(C')edge node[above]{$$}(E)
+(C')edge node[above]{$$}(B)
+(A) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(B') edge[>->] node[right]{$$} (E)
+(C') edge node[left]{$$} (B');
+\end{tikzpicture}
+\]
+}\item{The symmetric monoidal bicategory $\bold{EpicCsp(Sp(C))}$ whose objects are that of $\bold{C}$, morphisms are spans in $\bold{C}$ and 2-morphisms are isomorphism classes of cospans of spans with the morphisms of the inner cospans being epimorphisms such as in the following diagram:
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$c$};
+\node (A') at (1,0) {$a$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b$};
+\node (E) at (2,-1) {$c''$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A')
+(B) edge[->>] node[left]{$$} (B')
+(B)edge node[left]{$$}(C')
+(E) edge[->>] node[right]{$$} (B')
+(E) edge node[left]{$$} (A')
+(B') edge node[left]{$$} (A')
+(B') edge node[left]{$$} (C')
+(E) edge node[right]{$$} (C');
+\end{tikzpicture}
+\]
+}
+\item{The symmetric monoidal bicategory $\bold{Sp(Sp(C))}$ whose objects are that of $\bold{C}$, morphisms are spans in $\bold{C}$ and 2-morphisms are isomorphism classes of spans of spans such as in the following diagram:
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$c$};
+\node (A') at (1,0) {$a$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b$};
+\node (E) at (2,-1) {$c''$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A')
+(B) edge node[above]{$$} (C')
+(B') edge[->] node[left]{$$} (B)
+
+
+(B') edge[->] node[right]{$$} (E)
+
+(E) edge node[left]{$$} (A')
+(B') edge node[left]{$$} (A')
+(B') edge node[left]{$$} (C')
+(E) edge node[right]{$$} (C');
+\end{tikzpicture}
+\]
+}
+\item{The symmetric monoidal bicategory $\bold{Csp(Csp(C))}$ whose objects are that of $\bold{C}$, morphisms are cospans in $\bold{C}$ and 2-morphisms are isomorphism classes of cospans of cospans such as in the following diagram:
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$c$};
+\node (A') at (1,0) {$a$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b$};
+\node (E) at (2,-1) {$c''$};
+\path[->,font=\scriptsize,>=angle 90]
+(A') edge node[above]{$$} (B)
+(C') edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(E) edge[->] node[right]{$$} (B')
+(A') edge node[left]{$$} (B')
+(A')edge node[left]{$$}(E)
+(C')edge node[left]{$$}(E)
+(C') edge node[left]{$$} (B');
+\end{tikzpicture}
+\]
+}
+\end{enumerate}
+To construct these five symmetric monoidal bicategories we will exploit duality; the second and third are dual to each other and hence one will give the other by considering the opposite category. Likewise for the fourth and fifth. The first one is also immediate by taking the opposite category in the example of $\bold{Csp(C)}$ as in \cite{Cour}.
+
+To obtain a symmetric monoidal bicategory, we will first construct appropriate isofibrant symmetric monoidal pseudo double categories and then invoke the following result of Shulman:
+
+\begin{thm}[Shulman]
+Let $\lD$ be an isofibrant symmetric monoidal double category. Then $H(\bold{\lD})$ is a symmetric monoidal bicategory, where $H(\bold{\lD})$ is the horizontal edge bicategory of $\lD$.
+\end{thm}
+
+\section{Definitions and background}
+
+Pseudo double categories, also known as weak double categories, have been studied by Fiore in \cite{Fiore} and Pare and Grandis in \cite{Gran}. Before formally defining them, it is helpful to have the following picture in mind. A pseudo double category has 2-morphisms shaped like
+
+\begin{equation}\label{eq:square}
+  \xymatrix@-.5pc{
+    A \ar[r]|{|}^{M}  \ar[d]_f \ar@{}[dr]|{\Downarrow a}&
+    B\ar[d]^g\\
+    C \ar[r]|{|}_N & D
+  }
+\end{equation}
+
+We call $A, B, C$ and $D$ objects or \emph{0-cells}, $f$ and $g$ \emph{vertical 1-morphisms}, $M$ and $N$ \emph{horizontal 1-cells} and $a$ a \emph{2-morphism}. Note that a \emph{vertical 1-morphism} is a morphism between \emph{0-cells} and a \emph{2-morphism} is a morphism between \emph{horizontal 1-cells}. We will denote both kinds of morphisms and horizontal 1-cells as a single arrow, namely `$\to$', unless in a diagram, in which case they will be denoted as above.
+
+
+We follow the notation of Shulman \cite{Shul} with the following definitions.
+
+\begin{defn}
+A \textbf{pseudo double category} $\lD$, or $\textbf{double category}$ for short, consists of a category of objects $\bold{D_{0}}$ and a category of arrows $\bold{D_{1}}$ with the following functors
+\begin{center}
+$U\colon \bold{D_{0}} \to \bold{D_{1}}$\\
+$S,T \colon \bold{D_{1}} \rightrightarrows \bold{D_{0}}$\\
+$\odot \colon \bold{D_{1}} \times_{\bold{D_{0}}} \bold{D_{1}} \to \bold{D_{1}}$ (where the pullback is taken over $\bold{D_{1}} \xrightarrow[]{T} \bold{D_{0}} \xleftarrow[]{S} \bold{D_{1}}$) \\
+\end{center}
+ such that \\
+\begin{center}
+$S(U_{A})=A=T(U_{A})$\\
+$S(M \odot N)=SN$\\
+$T(M \odot N)=TM$\\
+\end{center}
+equipped with natural isomorphisms
+\begin{center}
+
+$\alpha \colon (M \odot N) \odot P \xrightarrow{\sim} M \odot (N \odot P)$\\
+$\lambda \colon U_{B} \odot M \xrightarrow{\sim} M$\\
+$\rho \colon M \odot U_{A} \xrightarrow{\sim} M$
+
+\end{center}
+such that $S(\alpha), S(\lambda), S(\rho), T(\alpha), T(\lambda)$ and $T(\rho)$ are all identities and that the coherence axioms of a monoidal category are satisfied. Following the notation of Shulman, objects of $\bold{D_{0}}$ are called $\textbf{0-cells}$ and morphisms of $\bold{D_{0}}$ are called $\textbf{vertical 1-morphisms}$. Objects of $\bold{D_{1}}$ are called $\textbf{horizontal 1-cells}$ and morphisms of $\bold{D_{1}}$ are called $\textbf{2-morphisms}$. The morphisms of $\bold{D_{0}}$, which are vertical 1-morphisms, will be denoted $f \colon A \to C$ and we denote a 1-cell $M$ with $S(M)=A,T(M)=B$ by $M \colon A \hto B$. Then a 2-morphism $a \colon M \to N$ of $\bold{D_{1}}$ with $S(a)=f,T(a)=g$ would look like
+\begin{equation}\label{eq:square}
+  \xymatrix@-.5pc{
+    A \ar[r]|{|}^{M}  \ar[d]_f \ar@{}[dr]|{\Downarrow a}&
+    B\ar[d]^g\\
+    C \ar[r]|{|}_N & D
+  }
+\end{equation}
+\end{defn}
+
+The key difference between a \emph{strict} double category and a pseudo double category is that in a pseudo double category, horizontal composition is associative and unital only up to natural isomorphism. Equivalently, as a double category can be viewed as a category internal to $\bold{Cat}$, we can view a pseudo double category as a category \emph{weakly} internal to $\bold{Cat}$. We will sometimes omit the word pseudo and simply say double category.
+
+\begin{defn}
+A 2-morphism where $f$ and $g$ are identities is called a \textbf{globular 2-morphism}.
+\end{defn}
+
+\begin{defn}
+Let $\lD$ be a pseudo double category. Then the $\textbf{horizontal edge bicategory}$ of $\lD$, which we denote as $H(\lD)$, is the bicategory consisting of objects of $\lD$, 1-morphisms that are horizontal 1-cells of $\lD$ and 2-morphisms that are globular 2-morphisms.
+\end{defn}
+
+\begin{defn}
+  A \textbf{monoidal double category} is a double category equipped the following
+structure.
+\begin{enumerate}
+\item $\bold{D_{0}}$ and $\bold{D_{1}}$ are both monoidal categories.
+\item If $I$ is the monoidal unit of $\bold{D_{0}}$, then $U_I$ is the
+  monoidal unit of $\bold{D_{1}}$.
+\item The functors $S$ and $T$ are strict monoidal, i.e.\ $S(M\ten N)
+  = SM\ten SN$ and $T(M\ten N)=TM\ten TN$ and $S$ and $T$ also
+  preserve the associativity and unit constraints.
+\item We have globular isomorphisms
+  \[\fx\maps (M_1\ten N_1)\odot (M_2\ten N_2)\too[\sim] (M_1\odot M_2)\ten (N_1\odot N_2)\]
+  and
+  \[\fu\maps U_{A\ten B} \too[\sim] (U_A \ten U_B)\]
+  such that the following diagrams commute:
+  \[\xymatrix{
+    ((M_1\ten N_1)\odot (M_2\ten N_2)) \odot (M_3\ten N_3) \ar[r]^{\fx \otimes 1} \ar[d]_{\alpha}
+    & ((M_1\odot M_2)\ten (N_1\odot N_2)) \odot (M_3\ten N_3) \ar[d]^{\fx}\\
+    (M_1\ten N_1)\odot ((M_2\ten N_2) \odot (M_3\ten N_3)) \ar[d]_{1 \otimes \fx} &
+    ((M_1\odot M_2)\odot M_3) \ten ((N_1\odot N_2)\odot N_3) \ar[d]^{\alpha \otimes \alpha}\\
+    (M_1\ten N_1) \odot ((M_2\odot M_3) \ten (N_2\odot N_3))\ar[r]^{\fx} &
+    (M_1\odot (M_2\odot M_3)) \ten (N_1\odot (N_2\odot N_3))}\]
+  \[\xymatrix{(M\ten N) \odot U_{C\ten D} \ar[r]^{1 \odot \fu} \ar[d]_{\rho} &
+    (M\ten N)\odot (U_C\ten U_D) \ar[d]^{\fx}\\
+    M\ten N\ar@{<-}[r]^{\rho \otimes \rho} & (M\odot U_C) \ten (N\odot U_D)}\]
+  \[\xymatrix{U_{A\ten B}\odot (M\ten N)  \ar[r]^{\fu \odot 1} \ar[d]_{\lambda} &
+    (U_A\ten U_B)\odot (M\ten N) \ar[d]^{\fx}\\
+    M\ten N\ar@{<-}[r]^{\lambda \otimes \lambda} & (U_A \odot M) \ten (U_B\odot N)}\]
+\item The following diagrams commute, expressing that the
+  associativity isomorphism for $\ten$ is a transformation of double
+  categories.
+  \[\xymatrix{
+    ((M_1\ten N_1)\ten P_1) \odot ((M_2\ten N_2)\ten P_2) \ar[r]^{a \odot a}\ar[d]_{\fx} &
+    (M_1\ten (N_1\ten P_1)) \odot (M_2\ten (N_2\ten P_2)) \ar[d]^{\fx}\\
+    ((M_1\ten N_1) \odot (M_2\ten N_2)) \ten (P_1\odot P_2) \ar[d]_{\fx \otimes 1} &
+    (M_1\odot M_2) \ten ((N_1\ten P_1)\odot (N_2\ten P_2))\ar[d]^{1 \otimes \fx} \\
+    ((M_1\odot M_2) \ten(N_1\odot N_2)) \ten (P_1\odot P_2) \ar[r]^{a} &
+    (M_1\odot M_2) \ten ((N_1\odot N_2)\ten (P_1\odot P_2))}\]
+  \[\xymatrix{
+    U_{(A\ten B)\ten C} \ar[r]^{U_{a}} \ar[d]_{\fx} & U_{A\ten (B\ten C)} \ar[d]^{\fx}\\
+    U_{A\ten B} \ten U_C \ar[d]_{\fx \otimes 1} & U_A\ten U_{B\ten C}\ar[d]^{1 \otimes \fx}\\
+    (U_A\ten U_B)\ten U_C \ar[r]^{a} & U_A\ten (U_B\ten U_C) }\]
+\item The following diagrams commute, expressing that the unit
+  isomorphisms for $\ten$ are transformations of double categories.
+  \[\vcenter{\xymatrix{
+      (M\ten U_I)\odot (N\ten U_I)\ar[r]^{\fx}\ar[d]_{\ell \odot \ell} &
+      (M\odot N)\ten (U_I \odot U_I) \ar[d]^{1 \otimes \lambda}\\
+      M\odot N \ar@{<-}[r]^{\ell} &
+      (M\odot N)\ten U_I }}\]
+  \[\vcenter{\xymatrix{U_{A\ten I} \ar[r]^{\fu} \ar[dr]_{U_{\ell}} & U_A\ten U_I \ar[d]^{\ell}\\
+       & U_A}}\]
+  \[\vcenter{\xymatrix{
+      (U_I\ten M)\odot (U_I\ten N)\ar[r]^{\fx} \ar[d]_{\ell \odot \ell} &
+      (U_I \odot U_I) \ten (M\odot N) \ar[d]^{\rho \otimes 1}\\
+      M\odot N \ar@{<-}[r]^{\ell} &
+      U_I\ten (M\odot N) }}\]
+  \[\vcenter{\xymatrix{U_{I\ten A} \ar[r]^{\fu}\ar[dr]_{U_{\ell}} & U_I\ten U_A \ar[d]^{\ell}\\
+      & U_A}}\]
+  \newcounter{mondbl}
+  \setcounter{mondbl}{\value{enumi}}
+\end{enumerate}
+Similarly, a braided monoidal double category is a monoidal double
+category with the following additional structure.
+\begin{enumerate}\setcounter{enumi}{\value{mondbl}}
+\item $\bold{D_{0}}$ and $\bold{D_{1}}$ are braided monoidal categories.
+\item The functors $S$ and $T$ are strict braided monoidal (i.e.\ they
+  preserve the braidings).
+\item The following diagrams commute, expressing that the braiding is
+  a transformation of double categories.
+  \[\xymatrix{(M_1\odot M_2)\ten (N_1\odot N_2) \ar[r]^\fs\ar[d]_\fx &
+    (N_1\odot N_2)\ten (M_1 \odot M_2)\ar[d]^\fx\\
+    (M_1\ten N_1)\odot (M_2\ten N_2) \ar[r]_{\fs\odot \fs} &
+    (N_1\ten M_1) \odot (N_2 \ten M_2)}
+  \]
+  \[\xymatrix{U_A \ten U_B \ar[r]^(0.55)\fu \ar[d]_\fs &
+    U_{A\ten B} \ar[d]^{U_\fs}\\
+    U_B\ten U_A \ar[r]_(0.55)\fu &
+    U_{B\ten A}}.
+  \]
+  \setcounter{mondbl}{\value{enumi}}
+\end{enumerate}
+Finally, a symmetric monoidal double category is a braided one such that
+\begin{enumerate}\setcounter{enumi}{\value{mondbl}}
+\item $\bold{D_{0}}$ and $\bold{D_{1}}$ are in fact symmetric monoidal.
+\end{enumerate}
+\end{defn}
+
+
+\begin{defn}\label{def:companion}
+  Let \lD\ be a double category and $f\maps A\to B$ a vertical
+  1-morphism.  A \textbf{companion} of $f$ is a horizontal 1-cell
+  $\fhat\maps A\hto B$ together with 2-morphisms
+  \begin{equation*}
+    \begin{array}{c}
+      \xymatrix@-.5pc{
+        \ar[r]|-@{|}^-{\fhat} \ar[d]_f \ar@{}[dr]|\Downarrow
+        & \ar@{=}[d]\\
+        \ar[r]|-@{|}_-{U_B} & }
+    \end{array}\quad\text{and}\quad
+    \begin{array}{c}
+      \xymatrix@-.5pc{
+        \ar[r]|-@{|}^-{U_A} \ar@{=}[d] \ar@{}[dr]|\Downarrow
+        & \ar[d]^f\\
+        \ar[r]|-@{|}_-{\fhat} & }
+    \end{array}
+  \end{equation*}
+  such that the following equations hold.
+  \begin{align}\label{eq:compeqn}
+    \begin{array}{c}
+      \xymatrix@-.5pc{
+        \ar[r]|-@{|}^-{U_A} \ar@{=}[d] \ar@{}[dr]|\Downarrow
+        & \ar[d]^f\\
+        \ar[r]|-{\fhat} \ar[d]_f \ar@{}[dr]|\Downarrow
+        & \ar@{=}[d]\\
+        \ar[r]|-@{|}_-{U_B} & }
+    \end{array} &= 
+    \begin{array}{c}
+      \xymatrix@-.5pc{ \ar[r]|-@{|}^-{U_A} \ar[d]_f
+        \ar@{}[dr]|{\Downarrow U_f} &  \ar[d]^f\\
+        \ar[r]|-@{|}_-{U_B} & }
+    \end{array}
+    &
+    \begin{array}{c}
+      \xymatrix@-.5pc{
+        \ar[r]|-@{|}^-{U_A} \ar@{=}[d] \ar@{}[dr]|\Downarrow &
+        \ar[r]|-@{|}^-{\fhat} \ar[d]_f \ar@{}[dr]|\Downarrow
+        & \ar@{=}[d]\\
+        \ar[r]|-@{|}_-{\fhat} &
+        \ar[r]|-@{|}_-{U_B} &}
+%       \xymatrix@-.5pc{
+%         \ar[rr]|-@{|}^-{\fhat} \ar@{}[drr]|\sim \ar@{=}[d] &&
+%         \ar@{=}[d] \\
+%         \ar[r]|-@{|}^-{U_A} \ar@{=}[d] \ar@{}[dr]|\Downarrow &
+%         \ar[r]|-@{|}^-{\fhat} \ar[d]_f \ar@{}[dr]|\Downarrow
+%         & \ar@{=}[d]\\
+%         \ar[r]|-@{|}_-{\fhat} &
+%         \ar[r]|-@{|}_-{U_B} &\\
+%         \ar[rr]|-@{|}_-{\fhat} \ar@{}[urr]|\sim \ar@{=}[u] &&
+%         \ar@{=}[u]}
+    \end{array} &=
+    \begin{array}{c}
+      \xymatrix@-.5pc{
+        \ar[r]|-@{|}^-{\fhat} \ar@{=}[d] \ar@{}[dr]|{\Downarrow 1_{\fhat}}
+        & \ar@{=}[d]\\
+        \ar[r]|-@{|}_-{\fhat} & }
+    \end{array}
+  \end{align}
+  A \textbf{conjoint} of $f$, denoted $\fchk\maps B\hto A$, is a
+  companion of $f$ in the double category $\lD^{h\cdot\mathrm{op}}$
+  obtained by reversing the horizontal 1-cells, but not the vertical
+  1-morphisms, of \lD.
+\end{defn}
+
+\begin{defn}
+  We say that a double category is \textbf{fibrant} if every vertical
+  1-morphism has both a companion and a conjoint.
+\end{defn}
+
+\begin{defn}
+We say that a double category is \textbf{isofibrant} if every vertical 1-isomorphism has both a companion and a conjoint.
+\end{defn}
+
+\section{Constructing the fibrant symmetric monoidal pseudo double category $\lC \bold{sp(Csp(C))}$}
+In this section we will construct the fibrant symmetric monoidal pseudo double category $\lC \bold{sp(Csp(C))}$ and apply the result of Shulman to obtain the symmetric monoidal bicategory $\bold{Csp(Csp(C))}$ as $H(\lC \bold{sp(Csp(C))})$, the horizontal-edge bicategory of $\lC \bold{sp(Csp(C))}$.
+
+Let $\bold{C}$ be a category with finite colimits. Let $\lC \bold{sp(Csp(C))}$ be the pseudo double category whose objects are that of $\bold{C}$, vertical 1-morphisms are given by isomorphism classes of cospans in $\bold{C}$, horizontal 1-cells are given by cospans in $\bold{C}$ and 2-morphisms are isomorphism classes of cospans of cospans in $\bold{C}$, as in the following diagram:
+
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$c$};
+\node (C) at (3,1) {$b$};
+\node (A') at (1,0) {$a'$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b'$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (2,-1) {$c''$};
+\node (F) at (3,-1) {$b''$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+
+The existence of finite colimits allows us to compose isomorphism classes of cospans, and as this composition is strictly associative, this shows that $\lD_{0}$ is a category. The existence of finite colimits allows us to compose cospans, and this composition is associative only up to a natural isomorphism $\alpha \colon (M \odot N) \odot P \to M \odot (N \odot P)$ which comes from the universal property of a pushout. We have structure functors $U \colon \lD_{0} \to \lD_{1}$ which map each object to the identity cospan on that object and likewise for morphisms, and also structure functors $S,T \colon \lD_{1} \rightrightarrows \lD_{0}$ such that $S(M \odot N)=SN$ and $T(M \odot N)=TM$. The functors $S$ and $T$ also are compatible with the functor $U$ and satisfy the desired equations.
+
+The two different compositions of 2-morphisms, namely vertical and horizontal which we denote as $\circ$ and $\odot$, respectively, satisfy an interchange law $$(\alpha \odot \beta) \circ (\alpha^\prime \odot \beta^\prime) = (\alpha \circ \alpha^\prime) \odot (\beta \circ \beta^\prime)$$
+which we show in the next section. This shows that $\lC \bold{sp(Csp(C))}$ is a pseudo double category.
+
+To obtain the monoidal structure, note that $\lC \bold{sp(Csp(C))}$ and the symmetric monoidal pseudo double category $\bold{Csp(C)}$ in \cite{Cour} have the same horizontal 1-cells, namely cospans of $\bold{C}$, and hence many of the diagrams follow from $\bold{Csp(C)}$ already being symmetric monoidal. What remains to be seen is that $\lD_{0}$ and $\lD_{1}$ are symmetric monoidal. As mentioned above, $\bold{C}$ having finite colimits makes $(\lD_{0},+,0)$ symmetric monoidal. Vertical composition of 2-morphisms in $\lD_{1}$ is strictly associative, and tensoring of horizontal 1-cells and 2-morphisms is component wise. Namely, if we have two 2-morphisms $\alpha$ and $\beta$ given by
+
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a_{1}$};
+\node (B) at (2,1) {$c_{1}$};
+\node (C) at (3,1) {$b_{1}$};
+\node (A') at (1,0) {$a_{1}'$};
+\node (B') at (2,0) {$c_{1}'$};
+\node (C') at (3,0) {$b_{1}'$};
+\node (D) at (1,-1) {$a_{1}''$};
+\node (E) at (2,-1) {$c_{1}''$};
+\node (F) at (3,-1) {$b_{1}''$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a_{2}$};
+\node (B) at (2,1) {$c_{2}$};
+\node (C) at (3,1) {$b_{2}$};
+\node (A') at (1,0) {$a_{2}'$};
+\node (B') at (2,0) {$c_{2}'$};
+\node (C') at (3,0) {$b_{2}'$};
+\node (D) at (1,-1) {$a_{2}''$};
+\node (E) at (2,-1) {$c_{2}''$};
+\node (F) at (3,-1) {$b_{2}''$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+respectively, then $\alpha \otimes \beta$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a_{1}+a_{2}$};
+\node (B) at (3,1) {$c_{1}+c_{2}$};
+\node (C) at (5,1) {$b_{1}+b_{2}$};
+\node (A') at (1,0) {$a_{1}'+a_{2}'$};
+\node (B') at (3,0) {$c_{1}'+c_{2}'$};
+\node (C') at (5,0) {$b_{1}'+b_{2}'$};
+\node (D) at (1,-1) {$a_{1}''+a_{2}''$};
+\node (E) at (3,-1) {$c_{1}''+c_{2}''$};
+\node (F) at (5,-1) {$b_{1}''+b_{2}''$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+Since the horizontal 1-cells are made up of components of $\bold{C}$, this also induces a monoidal structure on $\lD_{1}$; instead of tracing objects of $\bold{C}$ in the diagrams in the definition of symmetric monoidal category, we instead trace cospans in $\bold{C}$, but this is just a compent-wise diagram chase of the former.
+
+If we have a vertical 1-morphism $f:a \to c$ given by an isomorphism class of cospans, say
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,3) {$a$};
+\node (B) at (1,2) {$b$};
+\node (C) at (1,1) {$c$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(C)edge node[above]{$$}(B);
+\end{tikzpicture}
+\]
+then a companion of $f$ is the cospan $\hat{f}: a \hto c$ given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$b$};
+\node (C) at (3,1) {$c$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(C)edge node[above]{$$}(B);
+\end{tikzpicture}
+\]
+and we have the following two 2-morphisms
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$b$};
+\node (C) at (3,1) {$c$};
+\node (A') at (1,0) {$b$};
+\node (B') at (2,0) {$b$};
+\node (C') at (3,0) {$c$};
+\node (D) at (1,-1) {$c$};
+\node (E) at (2,-1) {$c$};
+\node (F) at (3,-1) {$c$};
+\node (A'') at (4,1) {$a$};
+\node (B'') at (5,1) {$a$};
+\node (C'') at (6,1) {$a$};
+\node (A''') at (4,0) {$a$};
+\node (B''') at (5,0) {$b$};
+\node (C''') at (6,0) {$b$};
+\node (D'') at (4,-1) {$a$};
+\node (E'') at (5,-1) {$b$};
+\node (F'') at (6,-1) {$c$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E)
+(A'') edge node[above]{$$} (B'')
+(A''')edge node[above]{$$}(B''')
+(C''')edge node[above]{$$}(B''')
+(A'') edge node[left]{$$} (A''')
+(C'') edge node[above]{$$} (B'')
+(B'') edge[->] node[left]{$$} (B''')
+(C'') edge node[right]{$$} (C''')
+(D'') edge node[left]{$$} (A''')
+(E'') edge[->] node[right]{$$} (B''')
+(F'') edge node[left]{$$} (C''')
+(D'') edge node[left]{$$} (E'')
+(F'') edge node[right]{$$} (E'');
+\end{tikzpicture}
+\]
+which make the required diagrams in the definition of companion commute. A conjoint of $f$ is given by $\fchk\maps c\hto a$
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (C) at (1,1) {$c$};
+\node (B) at (2,1) {$b$};
+\node (A) at (3,1) {$a$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(C)edge node[above]{$$}(B);
+\end{tikzpicture}
+\]
+This is just the companion of $f$ written in reverse order. It follows that $\lC \bold{sp(Csp(C))}$ is fibrant.
+
+\section{Interchange Law for $\lC \bold{sp(Csp(C))}$}
+Let $\alpha, \alpha^\prime, \beta, \beta^\prime$ be composable 2-morphisms given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$c$};
+\node (C) at (3,1) {$b$};
+\node (A') at (1,0) {$a'$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b'$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (2,-1) {$c''$};
+\node (F) at (3,-1) {$b''$};
+\node(Z) at (0,0){$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$b$};
+\node (B) at (2,1) {$f$};
+\node (C) at (3,1) {$e$};
+\node (A') at (1,0) {$b'$};
+\node (B') at (2,0) {$f'$};
+\node (C') at (3,0) {$e'$};
+\node (D) at (1,-1) {$b''$};
+\node (E) at (2,-1) {$f''$};
+\node (F) at (3,-1) {$e''$};
+\node(Z) at (0,0){$\alpha^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a''$};
+\node (B) at (2,1) {$c''$};
+\node (C) at (3,1) {$b''$};
+\node (A') at (1,0) {$a'''$};
+\node (B') at (2,0) {$c'''$};
+\node (C') at (3,0) {$b'''$};
+\node (D) at (1,-1) {$a''''$};
+\node (E) at (2,-1) {$c''''$};
+\node (F) at (3,-1) {$b''''$};
+\node(Z) at (0,0){$\beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$b''$};
+\node (B) at (2,1) {$f''$};
+\node (C) at (3,1) {$e''$};
+\node (A') at (1,0) {$b'''$};
+\node (B') at (2,0) {$f'''$};
+\node (C') at (3,0) {$e'''$};
+\node (D) at (1,-1) {$b''''$};
+\node (E) at (2,-1) {$f''''$};
+\node (F) at (3,-1) {$e''''$};
+\node(Z) at (0,0){$\beta^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+respectively.
+If we compose $\alpha$ and $\alpha^\prime$ horizontally we get that $\alpha \odot \alpha^\prime$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (3,1) {$c+_{b}f$};
+\node (C) at (5,1) {$e$};
+\node (A') at (1,0) {$a'$};
+\node (B') at (3,0) {$c'+_{b'}f'$};
+\node (C') at (5,0) {$e'$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (3,-1) {$c''+_{b''}f''$};
+\node (F) at (5,-1) {$e''$};
+\node(Z) at (0,0){$\alpha \odot \alpha^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and likewise $\beta \odot \beta^\prime$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a''$};
+\node (B) at (3,1) {$c''+_{b''}f''$};
+\node (C) at (5,1) {$e''$};
+\node (A') at (1,0) {$a'''$};
+\node (B') at (3,0) {$c'''+_{b'''}f'''$};
+\node (C') at (5,0) {$e'''$};
+\node (D) at (1,-1) {$a''''$};
+\node (E) at (3,-1) {$c''''+_{b''''}f''''$};
+\node (F) at (5,-1) {$e''''$};
+\node(Z) at (0,0){$\beta \odot \beta^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+Composing $\alpha \odot \alpha^\prime$ and $\beta \odot \beta^\prime$ vertically we then get
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (4,1) {$c+_{b}f$};
+\node (C) at (7,1) {$e$};
+\node (A') at (1,0) {$a'+_{a''}a'''$};
+\node (B') at (4,0) {$c'+_{b'}f' +_{c''+_{b''}f''} c'''+_{b'''}f'''$};
+\node (C') at (7,0) {$e' +_{e''}e'''$};
+\node (D) at (1,-1) {$a''''$};
+\node (E) at (4,-1) {$c''''+_{b''''}f''''$};
+\node (F) at (7,-1) {$e''''$};
+\node(Z) at (-1,0){$(\alpha \odot \alpha^\prime) \circ (\beta \odot \beta^\prime) =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+Similarly, we can do the vertical compositions first to obtain
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (3,1) {$c$};
+\node (C) at (5,1) {$b$};
+\node (A') at (1,0) {$a' +_{a''}a'''$};
+\node (B') at (3,0) {$c' +_{c''}c'''$};
+\node (C') at (5,0) {$b' +_{b''}b'''$};
+\node (D) at (1,-1) {$a''''$};
+\node (E) at (3,-1) {$c''''$};
+\node (F) at (5,-1) {$b''''$};
+\node(Z)at(0,0){$\alpha \circ \beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(A')edge node[left]{$$}(B')
+(C')edge node[left]{$$}(B')
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$b$};
+\node (B) at (3,1) {$f$};
+\node (C) at (5,1) {$e$};
+\node (A') at (1,0) {$b' +_{b''}b'''$};
+\node (B') at (3,0) {$f' +_{f''}f'''$};
+\node (C') at (5,0) {$e' +_{e''}e'''$};
+\node (D) at (1,-1) {$b''''$};
+\node (E) at (3,-1) {$f''''$};
+\node (F) at (5,-1) {$e''''$};
+\node(Z)at(0,0){$\alpha^\prime \circ \beta^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(A')edge node[left]{$$}(B')
+(C')edge node[left]{$$}(B')
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+Composing $\alpha \circ \beta$ and $\alpha^\prime \circ \beta^\prime$ horizontally we then get
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (4,1) {$c+_{b}f$};
+\node (C) at (7,1) {$e$};
+\node (A') at (1,0) {$a' +_{a''}a'''$};
+\node (B') at (4,0) {$c'+_{c''}c'''+_{b'+_{b''}b'''}f'+_{f''}f'''$};
+\node (C') at (7,0) {$e' +_{e''}e'''$};
+\node (D) at (1,-1) {$a''''$};
+\node (E) at (4,-1) {$c''''+_{b''''}f''''$};
+\node (F) at (7,-1) {$e''''$};
+\node(Z)at(-1,0){$(\alpha \circ \beta) \odot (\alpha^\prime \circ \beta^\prime) =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[left]{$$} (A')
+(C) edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(C) edge node[right]{$$} (C')
+(D) edge node[left]{$$} (A')
+(E) edge[->] node[right]{$$} (B')
+(F) edge node[left]{$$} (C')
+(D) edge node[left]{$$} (E)
+(A')edge node[left]{$$}(B')
+(C')edge node[left]{$$}(B')
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+The two compositions of 2-morphisms yield 2-morphisms that are identical at every piece except in the middle. Thus to complete the interchange law, it suffices to establish an isomorphism $$\psi \colon c'+_{b'}f' +_{c''+_{b''}f''}c'''+_{b'''}f''' \to c' +_{c''}c''' +_{b' +_{b''}b'''} f' +_{f''}f'''$$
+We can obtain this isomorphism by realizing each side as a colimit of the same diagram, namely
+
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',node distance=1.1cm, auto]
+ \node(B1) {$b''$};
+ \node(B2) [above of=B1,left of=B1] {$b'$};
+ \node(B3) [above of=B1,right of=B1] {$b'''$};
+ \node(C3) [above of=B2,left of=B2] {$c'''$};
+ \node(C2) [below of=C3,left of=C3] {$c''$};
+ \node(C1) [above of=C2,left of=C2] {$c'$};
+ \node(F1) [above of=B3,right of=B3] {$f'$};
+ \node(F2) [below of=F1,right of=F1] {$f''$};
+ \node(F3) [above of=F2,right of=F2] {$f'''$};
+ \draw[->] (B1) to node [swap]{$$} (B2);
+ \draw[->] (B1) to node [swap]{$$} (B3);
+ \draw[->] (C2) to node [swap]{$$} (C3);
+ \draw[->] (C2) to node [swap]{$$} (C1);
+ \draw[->] (F2) to node [swap]{$$} (F3);
+ \draw[->] (F2) to node [swap]{$$} (F1);
+ \draw[->] (B3) to node [swap]{$$} (F3);
+ \draw[->] (B3) to node [swap]{$$} (C3);
+ \draw[->] (B2) to node [swap]{$$} (F1);
+ \draw[->] (B2) to node [swap]{$$} (C1);
+ \draw[->] (B1) to node [swap]{$$} (F2);
+ \draw[->] (B1) to node [swap]{$$} (C2);
+\end{tikzpicture}
+\end{center}
+We compute the colimit of the above diagram in the following two ways
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',node distance=1.1cm, auto]
+ \node(B1) {$b''$};
+ \node(B2) [above of=B1,left of=B1] {$b'$};
+ \node(B3) [above of=B1,right of=B1] {$b'''$};
+ \node(C3) [above of=B2,left of=B2] {$c'''$};
+ \node(C2) [below of=C3,left of=C3] {$c''$};
+ \node(C1) [above of=C2,left of=C2] {$c'$};
+ \node(F1) [above of=B3,right of=B3] {$f'$};
+ \node(F2) [below of=F1,right of=F1] {$f''$};
+ \node(F3) [above of=F2,right of=F2] {$f'''$};
+\node(E1) [above of=C1,right of=C1] {$c'+_{b'}f'$};
+\node(E2) [above of=B2,right of=B2] {$c''+_{b''}f''$};
+\node(E3) [above of=F1,right of=F1] {$c'''+_{b'''}f'''$};
+\node(E4) [above=2cm of E2] {$c'+_{b'}f' +_{c''+_{b''}f''} c'''+_{b'''}f'''$};
+ \draw[->] (B1) to node [swap]{$$} (B2);
+ \draw[->] (B1) to node [swap]{$$} (B3);
+ \draw[->] (C2) to node [swap]{$$} (C3);
+ \draw[->] (C2) to node [swap]{$$} (C1);
+ \draw[->] (F2) to node [swap]{$$} (F3);
+ \draw[->] (F2) to node [swap]{$$} (F1);
+ \draw[->] (B3) to node [swap]{$$} (F3);
+ \draw[->] (B3) to node [swap]{$$} (C3);
+ \draw[->] (B2) to node [swap]{$$} (F1);
+ \draw[->] (B2) to node [swap]{$$} (C1);
+ \draw[->] (B1) to node [swap]{$$} (F2);
+ \draw[->] (B1) to node [swap]{$$} (C2);
+ \draw[->] (F2) to node [swap]{$$} (F1);
+ \draw[->] (C3) to node [swap]{$$} (E3);
+ \draw[->] (F3) to node [swap]{$$} (E3);
+ \draw[->] (F2) to node [swap]{$$} (E2);
+ \draw[->] (C2) to node [swap]{$$} (E2);
+ \draw[->] (F1) to node [swap]{$$} (E1);
+ \draw[->] (C1) to node [swap]{$$} (E1);
+ \draw[->] (E1) to node [swap]{$$} (E4);
+ \draw[->] (E3) to node [swap]{$$} (E4);
+ \draw[->] (E2) to node [swap]{$$} (E1);
+ \draw[->] (E2) to node [swap]{$$} (E3);
+\end{tikzpicture}
+\end{center}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',node distance=1.1cm, auto]
+ \node(B1) {$b''$};
+ \node(B2) [above of=B1,left of=B1] {$b'$};
+ \node(B3) [above of=B1,right of=B1] {$b'''$};
+ \node(C3) [above of=B2,left of=B2] {$c'''$};
+ \node(C2) [below of=C3,left of=C3] {$c''$};
+ \node(C1) [above of=C2,left of=C2] {$c'$};
+ \node(F1) [above of=B3,right of=B3] {$f'$};
+ \node(F2) [below of=F1,right of=F1] {$f''$};
+ \node(F3) [above of=F2,right of=F2] {$f'''$};
+\node(E1) [above of=C1,right of=C1] {$c'+_{c''}c'''$};
+\node(E2) [above of=B2,right of=B2] {$b'+_{b''}b'''$};
+\node(E3) [above of=F1,right of=F1] {$f'+_{f''}f'''$};
+\node(E4) [above=2cm of E2] {$c'+_{c''}c''' +_{b'+_{b''}b'''} f'+_{f''}f'''$};
+ \draw[->] (B1) to node [swap]{$$} (B2);
+ \draw[->] (B1) to node [swap]{$$} (B3);
+ \draw[->] (C2) to node [swap]{$$} (C3);
+ \draw[->] (C2) to node [swap]{$$} (C1);
+ \draw[->] (F2) to node [swap]{$$} (F3);
+ \draw[->] (F2) to node [swap]{$$} (F1);
+ \draw[->] (B3) to node [swap]{$$} (F3);
+ \draw[->] (B3) to node [swap]{$$} (E2);
+ \draw[->] (B2) to node [swap]{$$} (E2);
+ \draw[->] (B2) to node [swap]{$$} (C1);
+ \draw[->] (B1) to node [swap]{$$} (F2);
+ \draw[->] (B1) to node [swap]{$$} (C2);
+ \draw[->] (F2) to node [swap]{$$} (F1);
+ \draw[->] (C3) to node [swap]{$$} (E1);
+ \draw[->] (F3) to node [swap]{$$} (E3);
+ \draw[->] (F2) to node [swap]{$$} (E2);
+ \draw[->] (C2) to node [swap]{$$} (E2);
+ \draw[->] (F1) to node [swap]{$$} (E3);
+ \draw[->] (C1) to node [swap]{$$} (E1);
+ \draw[->] (E1) to node [swap]{$$} (E4);
+ \draw[->] (E3) to node [swap]{$$} (E4);
+ \draw[->] (E2) to node [swap]{$$} (E1);
+ \draw[->] (E2) to node [swap]{$$} (E3);
+ \draw[->] (B2) to node [swap]{$$} (F1);
+ \draw[->] (B3) to node [swap]{$$} (C3);
+\end{tikzpicture}
+\end{center}
+The universal property of a colimit gives the desired isomorphism and establishes the interchange law. Applying Shulman's result to $\lC \bold{sp(Csp(C))}$ we get that $H(\lC \bold{sp(Csp(C))}) = \bold{Csp(Csp(C))}$ is a symmetric monoidal bicategory.
+All together, we have the following:
+
+\begin{thm}
+Let $\bold{C}$ be a category with finite colimits. Then $\bold{Csp(Csp(C))}$ is a symmetric monoidal bicategory with objects that of $\bold{C}$, morphisms cospans in $\bold{C}$ and 2-morphisms isomorphism classe of cospans of cospans in $\bold{C}$ as in the following diagram
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$c$};
+\node (A') at (1,0) {$a$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b$};
+\node (E) at (2,-1) {$c''$};
+\path[->,font=\scriptsize,>=angle 90]
+(A') edge node[above]{$$} (B)
+(C')edge node[above]{$$}(B')
+(C') edge node[above]{$$} (B)
+(B) edge[->] node[left]{$$} (B')
+(A') edge[->] node[left]{$$} (E)
+(C') edge[->] node[left]{$$} (E)
+(A') edge[->] node[left]{$$} (B')
+(E) edge[->] node[right]{$$} (B');
+\end{tikzpicture}
+\]
+The monoidal structure is induced by the monoidal structure of $(\bold{C},+,0)$, namely if $a$ and $b$ are objects of $\bold{C}$ then $a \otimes b = a+b$. Given two morphisms $f:a \to c$ and $g:a' \to c'$
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$b$};
+\node (C) at (3,1) {$c$};
+\node (D) at (0,1) {$f=$};
+\node (A') at (0,0) {$g=$};
+\node (B') at (1,0) {$a'$};
+\node (C') at (2,0) {$b'$};
+\node (D') at (3,0) {$c'$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(C)edge node[above]{$$}(B)
+(B') edge node[above]{$$} (C')
+(D')edge node[above]{$$}(C');
+\end{tikzpicture}
+\]
+then $f+g \colon a+a' \to c+c'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a+a'$};
+\node (B) at (3,1) {$b+b'$};
+\node (C) at (5,1) {$c+c'$};
+\node (D) at (0,1) {$f+g=$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(C)edge node[above]{$$}(B);
+\end{tikzpicture}
+\]
+Given two 2-morphisms $\alpha \colon f \rightarrow g$ and $\beta \colon f' \rightarrow g'$
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1}$};
+\node (A') at (1,0) {$a_{1}$};
+\node (B') at (2,0) {$b_{1}'$};
+\node (C') at (3,0) {$c_{1}$};
+\node (E) at (2,-1) {$b_{1}''$};
+\node (Z) at (0,0) {$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(B)
+(B) edge[->] node[left]{$$} (B')
+(C')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(E)
+(A')edge node[above]{$$}(E)
+(E) edge[->] node[right]{$$} (B');
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{2}$};
+\node (A') at (1,0) {$a_{2}$};
+\node (B') at (2,0) {$b_{2}'$};
+\node (C') at (3,0) {$c_{2}$};
+\node (E) at (2,-1) {$b_{2}''$};
+\node (Z) at (0,0) {$\beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(B)
+(B) edge[->] node[left]{$$} (B')
+(C')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(E)
+(A')edge node[above]{$$}(E)
+(E) edge[->] node[right]{$$} (B');
+\end{tikzpicture}
+\]
+respectively, then $\alpha \otimes \beta = \alpha + \beta \colon f+f' \to g+g'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1}+b_{2}$};
+\node (A') at (0,0) {$a_{1}+a_{2}$};
+\node (B') at (2,0) {$b_{1}'+b_{2}'$};
+\node (C') at (4,0) {$c_{1}+c_{2}$};
+\node (E) at (2,-1) {$b_{1}''+b_{2}''$};
+\node (Z) at (-1.5,0) {$\alpha \otimes \beta = \alpha + \beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(B)
+(B) edge[->] node[left]{$$} (B')
+(C')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(E)
+(A')edge node[above]{$$}(E)
+(E) edge[->] node[right]{$$} (B');
+\end{tikzpicture}
+\]
+\end{thm}
+
+\begin{proof}
+Apply Shulman's result to $\lC \bold{sp(Csp(C))}$ to obtain $H(\lC \bold{sp(Csp(C))} = \bold{Csp(Csp(C))}$. 
+\end{proof}
+\noindent
+By duality, we also have the following:
+\begin{thm}
+Let $\bold{C}$ be a category with finite limits. Then $\bold{Sp(Sp(C))}$ is a symmetric monoidal bicategory with objects that of $\bold{C}$, morphisms spans in $\bold{C}$ and 2-morphisms isomorphism classes of spans of spans in $\bold{C}$ as in the following diagram
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$c$};
+\node (A') at (1,0) {$a$};
+\node (B') at (2,0) {$c'$};
+\node (C') at (3,0) {$b$};
+\node (E) at (2,-1) {$c''$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A')
+(B')edge node[above]{$$}(C')
+(B) edge node[above]{$$} (C')
+(B') edge[->] node[left]{$$} (B)
+(E) edge[->] node[left]{$$} (A')
+(E) edge[->] node[left]{$$} (C')
+(B') edge[->] node[left]{$$} (A')
+(B') edge[->] node[right]{$$} (E);
+\end{tikzpicture}
+\]
+The monoidal structure is induced by the monoidal structure of $(\bold{C},\times,1)$, namely if $a$ and $b$ are objects of $\bold{C}$ then $a \otimes b = a \times b$. Given two morphisms $f:a \to c$ and $g:a' \to c'$
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$b$};
+\node (C) at (3,1) {$c$};
+\node (D) at (0,1) {$f=$};
+\node (A') at (0,0) {$g=$};
+\node (B') at (1,0) {$a'$};
+\node (C') at (2,0) {$b'$};
+\node (D') at (3,0) {$c'$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A)
+(B)edge node[above]{$$}(C)
+(C') edge node[above]{$$} (B')
+(C')edge node[above]{$$}(D');
+\end{tikzpicture}
+\]
+then $f \times g \colon a \times a' \to c \times c'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a \times a'$};
+\node (B) at (3,1) {$b \times b'$};
+\node (C) at (5,1) {$c \times c'$};
+\node (D) at (0,1) {$f \times g=$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A)
+(B)edge node[above]{$$}(C);
+\end{tikzpicture}
+\]
+Given two 2-morphisms $\alpha \colon f \rightarrow g$ and $\beta \colon f' \rightarrow g'$
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1}$};
+\node (A') at (1,0) {$a_{1}$};
+\node (B') at (2,0) {$b_{1}'$};
+\node (C') at (3,0) {$c_{1}$};
+\node (E) at (2,-1) {$b_{1}''$};
+\node (Z) at (0,0) {$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B')edge node[above]{$$}(A')
+(B')edge node[above]{$$}(C')
+(B)edge node[above]{$$}(A')
+(B)edge node[above]{$$}(C')
+(B') edge[->] node[left]{$$} (B)
+(B)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(A')
+(B') edge[->] node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{2}$};
+\node (A') at (1,0) {$a_{2}$};
+\node (B') at (2,0) {$b_{2}'$};
+\node (C') at (3,0) {$c_{2}$};
+\node (E) at (2,-1) {$b_{2}''$};
+\node (Z) at (0,0) {$\beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B')edge node[above]{$$}(A')
+(B')edge node[above]{$$}(C')
+(B)edge node[above]{$$}(A')
+(B)edge node[above]{$$}(C')
+(B') edge[->] node[left]{$$} (B)
+(B)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(A')
+(B') edge[->] node[right]{$$} (E);
+\end{tikzpicture}
+\]
+respectively, then $\alpha \otimes \beta = \alpha \times \beta \colon f \times f' \to g \times g'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1} \times b_{2}$};
+\node (A') at (0,0) {$a_{1} \times a_{2}$};
+\node (B') at (2,0) {$b_{1}' \times b_{2}'$};
+\node (C') at (4,0) {$c_{1} \times c_{2}$};
+\node (E) at (2,-1) {$b_{1}'' \times b_{2}''$};
+\node (Z) at (-1.5,0) {$\alpha \otimes \beta = \alpha \times \beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B')edge node[above]{$$}(A')
+(B')edge node[above]{$$}(C')
+(B)edge node[above]{$$}(A')
+(B)edge node[above]{$$}(C')
+(B') edge[->] node[left]{$$} (B)
+(B)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(A')
+(B') edge[->] node[right]{$$} (E);
+\end{tikzpicture}
+\]
+\end{thm}
+
+\begin{proof}
+Apply Shulman's result to $\lS \bold{p(Sp(C))}$ to obtain $H(\lS \bold{p(Sp(C))} = \bold{Sp(Sp(C))}$. 
+\end{proof}
+
+\section{Constructing the isofibrant symmetric monoidal pseudo double category $\lM \bold{onicSp(Csp(C))}$}
+In this section we will construct the isofibrant symmetric monoidal pseudo double category $\lM \bold{onicSp(Csp(C))}$ and apply the result of Shulman to obtain the symmetric monoidal bicategory $\bold{MonicSp(Csp(C))}$ as $H(\lM \bold{onicSp(Csp(C))})$, the horizontal-edge bicategory of $\lM \bold{onicSp(Csp(C))}$.
+
+Let $\bold{C}$ be a topos. Let $\lM \bold{onicSp(Csp(C))}$ be the pseudo double category whose objects are that of $\bold{C}$, vertical 1-morphisms are given by isomorphisms in $\bold{C}$, horizontal 1-cells are given by cospans in $\bold{C}$ and 2-morphisms are isomorphism classes of diagrams of the following form:
+
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$c$};
+\node (C) at (3,1) {$b$};
+\node (B') at (2,0) {$c'$};
+\node (D) at (1,-1) {$a'$};
+\node (E) at (2,-1) {$c''$};
+\node (F) at (3,-1) {$b'$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+
+Since $\bold{C}$ is a topos, $\bold{C}$ has finite limits and colimits. Vertical composition of these 2-morphisms is by composing the outer isomorphisms and pulling back the inner spans and this is strictly associative as we take isomorphism classes of spans. The existence of finite colimits allows us to compose cospans, and this composition is associative only up to a natural isomorphism $\alpha \colon (M \odot N) \odot P \to M \odot (N \odot P)$ which comes from the universal property of a pushout. We have structure functors $U \colon \lD_{0} \to \lD_{1}$ which map each object to the identity cospan on that object and likewise for morphisms, and also structure functors $S,T \colon \lD_{1} \rightrightarrows \lD_{0}$ such that $S(M \odot N)=SN$ and $T(M \odot N)=TM$. The functors $S$ and $T$ also are compatible with the functor $U$ and satisfy the desired equations.
+
+The two different compositions of 2-morphisms, namely vertical and horizontal which we denote as $\circ$ and $\odot$, respectively, satisfy an interchange law $$(\alpha \odot \beta) \circ (\alpha^\prime \odot \beta^\prime) = (\alpha \circ \alpha^\prime) \odot (\beta \circ \beta^\prime)$$
+which we show in the next section. It follows that $\lM \bold{onicSp(Csp(C))}$ is a pseudo double category.
+
+To obtain the monoidal structure, note that $\lM \bold{onicSp(Csp(C))}$ and the symmetric monoidal pseudo double category $\bold{Csp(C)}$ in \cite{Cour} have the same horizontal 1-cells, namely cospans of $\bold{C}$, and hence many of the diagrams follow from $\bold{Csp(C)}$ already being symmetric monoidal. What remains to be seen is that $\lD_{0}$ and $\lD_{1}$ are symmetric monoidal. As mentioned above, $\bold{C}$ being a topos makes $(\lD_{0},+,0)$ symmetric monoidal and vertical composition of 2-morphisms in $\lD_{1}$ is strictly associative. Tensoring horizontal 1-cells and 2-morphisms is component wise, namely  if we have two 2-morphisms $\alpha$ and $\beta$ given by
+
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a_{1}$};
+\node (B) at (2,1) {$c_{1}$};
+\node (C) at (3,1) {$b_{1}$};
+\node (B') at (2,0) {$c_{1}'$};
+\node (D) at (1,-1) {$a_{1}'$};
+\node (E) at (2,-1) {$c_{1}''$};
+\node (F) at (3,-1) {$b_{1}'$};
+\node (Z) at (0,0) {$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a_{2}$};
+\node (B) at (2,1) {$c_{2}$};
+\node (C) at (3,1) {$b_{2}$};
+\node (B') at (2,0) {$c_{2}'$};
+\node (D) at (1,-1) {$a_{2}'$};
+\node (E) at (2,-1) {$c_{2}''$};
+\node (F) at (3,-1) {$b_{2}'$};
+\node (Z) at (0,0) {$\beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+then $\alpha \otimes \beta$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a_{1}+a_{2}$};
+\node (B) at (3,1) {$c_{1}+c_{2}$};
+\node (C) at (5,1) {$b_{1}+b_{2}$};
+\node (B') at (3,0) {$c_{1}'+c_{2}'$};
+\node (D) at (1,-1) {$a_{1}'+a_{2}'$};
+\node (E) at (3,-1) {$c_{1}''+c_{2}''$};
+\node (F) at (5,-1) {$b_{1}'+b_{2}'$};
+\node (Z) at (-1,0) {$\alpha \otimes \beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+A vertical 1-morphism, which is an isomorphism, $\phi \colon a \to a'$ lifts to the cospan given by $a \xrightarrow{\phi} a' \xleftarrow{\id_{a'}} a'$ from which it follows that $\lM \bold{onicSp(Csp(C))}$ is isofibrant.
+\section{Interchange Law for $\lM \bold{onicSp(Csp(C))}$}
+Let $\alpha, \alpha^\prime, \beta, \beta^\prime$ be composable 2-morphisms given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$c$};
+\node (C) at (3,1) {$b$};
+\node (B') at (2,0) {$c'$};
+\node (D) at (1,-1) {$a'$};
+\node (E) at (2,-1) {$c''$};
+\node (F) at (3,-1) {$b'$};
+\node (Z) at (0,0) {$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$b$};
+\node (B) at (2,1) {$f$};
+\node (C) at (3,1) {$e$};
+\node (B') at (2,0) {$f'$};
+\node (D) at (1,-1) {$b'$};
+\node (E) at (2,-1) {$f''$};
+\node (F) at (3,-1) {$e'$};
+\node (Z) at (0,0) {$\alpha^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a'$};
+\node (B) at (2,1) {$c''$};
+\node (C) at (3,1) {$b'$};
+\node (B') at (2,0) {$c'''$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (2,-1) {$c''''$};
+\node (F) at (3,-1) {$b''$};
+\node (Z) at (0,0) {$\beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$b'$};
+\node (B) at (2,1) {$f''$};
+\node (C) at (3,1) {$e'$};
+\node (B') at (2,0) {$f'''$};
+\node (D) at (1,-1) {$b''$};
+\node (E) at (2,-1) {$f''''$};
+\node (F) at (3,-1) {$e''$};
+\node (Z) at (0,0) {$\beta^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+If we compose $\alpha$ and $\alpha^\prime$ horizontally we get that $\alpha \odot \alpha^\prime$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (3,1) {$c+_{b}f$};
+\node (C) at (5,1) {$e$};
+\node (B') at (3,0) {$c'+_{b}f'$};
+\node (D) at (1,-1) {$a'$};
+\node (E) at (3,-1) {$c''+_{b}f''$};
+\node (F) at (5,-1) {$e'$};
+\node (Z) at (-1,0) {$\alpha \odot \alpha^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and likewise $\beta \odot \beta^\prime$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a'$};
+\node (B) at (3,1) {$c''+_{b}f''$};
+\node (C) at (5,1) {$e'$};
+\node (B') at (3,0) {$c'''+_{b}f'''$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (3,-1) {$c''''+_{b}f''''$};
+\node (F) at (5,-1) {$e''$};
+\node (Z) at (-1,0) {$\beta \odot \beta^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+Composing $\alpha \odot \alpha^\prime$ and $\beta \odot \beta^\prime$ vertically we then get
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (3,1) {$c+_{b}f$};
+\node (C) at (5,1) {$e$};
+\node (B') at (3,0) {$c'+_{b}f' \times_{c''+_{b}f''} c'''+_{b}f'''$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (3,-1) {$c''''+_{b}f''''$};
+\node (F) at (5,-1) {$e''$};
+\node (Z) at (-1,0) {$(\alpha \odot \alpha^\prime) \circ (\beta \odot \beta^\prime) =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+Similarly, we can do the vertical compositions first to obtain
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$c$};
+\node (C) at (3,1) {$b$};
+\node (B') at (2,0) {$c' \times_{c''} c'''$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (2,-1) {$c''''$};
+\node (F) at (3,-1) {$b''$};
+\node (Z) at (0,0) {$\alpha \circ \beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$b$};
+\node (B) at (2,1) {$f$};
+\node (C) at (3,1) {$e$};
+\node (B') at (2,0) {$f' \times_{f''} f'''$};
+\node (D) at (1,-1) {$b''$};
+\node (E) at (2,-1) {$f''''$};
+\node (F) at (3,-1) {$e''$};
+\node (Z) at (0,0) {$\alpha^\prime \circ \beta^\prime =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+Composing $\alpha \circ \beta$ and $\alpha^\prime \circ \beta^\prime$ horizontally we then get
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (3,1) {$c+_{b}f$};
+\node (C) at (5,1) {$e$};
+\node (B') at (3,0) {$c' \times_{c''} c'''+_{b}f' \times_{f''}f'''$};
+\node (D) at (1,-1) {$a''$};
+\node (E) at (3,-1) {$c''''+_{b}f''''$};
+\node (F) at (5,-1) {$e''$};
+\node (Z) at (-1,0) {$(\alpha \circ \beta) \odot (\alpha^\prime \circ \beta^\prime) =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(A) edge node[above,left]{$\sim$}(D)
+(C) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(C) edge node[above,right]{$\sim$}(F)
+(A) edge node[above]{$$}(B')
+(B') edge[>->] node[right]{$$} (E)
+(D) edge node[above]{$$}(B')
+(C) edge node[above]{$$}(B')
+(F) edge node[above]{$$}(B')
+(D) edge node[left]{$$} (E)
+(F) edge node[right]{$$} (E);
+\end{tikzpicture}
+\]
+The two compositions of 2-morphisms yield 2-morphisms that are identical at every piece except in the middle. Thus to complete the interchange law, it suffices to establish an isomorphism $$\theta \colon c'+_{b}f' \times_{c''+_{b}f''}c'''+_{b}f''' \to c' \times_{c''}c''' +_{b} f' \times_{f''}f'''$$
+This follows immediately from the work of Cicala \cite{Cic}. Putting this all together, we have the following.
+
+\begin{thm}
+Let $\bold{C}$ be a topos. Then $\bold{MonicSp(Csp(C))}$ is a symmetric monoidal bicategory with objects as objects of $\bold{C}$, morphisms as cospans in $\bold{C}$, and 2-morphisms as isomorphism classes of spans of cospans such that morphisms of the span in the middle are monic, as in the following diagram.
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b$};
+\node (A) at (1,0) {$a$};
+\node (B') at (2,0) {$b'$};
+\node (C') at (3,0) {$c$};
+\node (E) at (2,-1) {$b''$};
+\path[->,font=\scriptsize,>=angle 90]
+(A)edge node[above]{$$}(B')
+(A)edge node[above]{$$}(E)
+(C')edge node[above]{$$}(E)
+(C')edge node[above]{$$}(B)
+(A) edge node[above]{$$} (B)
+(B') edge[>->] node[left]{$$} (B)
+(B') edge[>->] node[right]{$$} (E)
+(C') edge node[left]{$$} (B');
+\end{tikzpicture}
+\]
+Vertical composition is given by taking pullbacks of spans that line up vertically and horizontal composition is given by taking pushouts of cospans that line up horizontally. The monoidal structure is given by taking coproducts component wise, namely if $f \colon a \to c$ and $g \colon a^\prime \to c^\prime$ are given by 
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$b$};
+\node (C) at (3,1) {$c$};
+\node (D) at (0,1) {$f=$};
+\node (A') at (0,0) {$g=$};
+\node (B') at (1,0) {$a'$};
+\node (C') at (2,0) {$b'$};
+\node (D') at (3,0) {$c'$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(C)edge node[above]{$$}(B)
+(B') edge node[above]{$$} (C')
+(D')edge node[above]{$$}(C');
+\end{tikzpicture}
+\]
+then $f+g \colon a+a' \to c+c'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a+a'$};
+\node (B) at (3,1) {$b+b'$};
+\node (C) at (5,1) {$c+c'$};
+\node (D) at (0,1) {$f+g=$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$$} (B)
+(C)edge node[above]{$$}(B);
+\end{tikzpicture}
+\]
+Given two 2-morphisms $\alpha \colon f \rightarrow g$ and $\beta \colon f' \rightarrow g'$
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1}$};
+\node (A') at (1,0) {$a_{1}$};
+\node (B') at (2,0) {$b_{1}'$};
+\node (C') at (3,0) {$c_{1}$};
+\node (E) at (2,-1) {$b_{1}''$};
+\node (Z) at (0,0) {$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(B)
+(B') edge[>->] node[left]{$$} (B)
+(C')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(E)
+(A')edge node[above]{$$}(E)
+(B') edge[>->] node[right]{$$} (E);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{2}$};
+\node (A') at (1,0) {$a_{2}$};
+\node (B') at (2,0) {$b_{2}'$};
+\node (C') at (3,0) {$c_{2}$};
+\node (E) at (2,-1) {$b_{2}''$};
+\node (Z) at (0,0) {$\beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(B)
+(B') edge[>->] node[left]{$$} (B)
+(C')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(E)
+(A')edge node[above]{$$}(E)
+(B') edge[>->] node[right]{$$} (E);
+\end{tikzpicture}
+\]
+respectively, then $\alpha \otimes \beta = \alpha + \beta \colon f+f' \to g+g'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1}+b_{2}$};
+\node (A') at (0,0) {$a_{1}+a_{2}$};
+\node (B') at (2,0) {$b_{1}'+b_{2}'$};
+\node (C') at (4,0) {$c_{1}+c_{2}$};
+\node (E) at (2,-1) {$b_{1}''+b_{2}''$};
+\node (Z) at (-1.5,0) {$\alpha \otimes \beta = \alpha + \beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(A')edge node[above]{$$}(B')
+(C')edge node[above]{$$}(B')
+(A')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(B)
+(B') edge[>->] node[left]{$$} (B)
+(C')edge node[above]{$$}(B)
+(C')edge node[above]{$$}(E)
+(A')edge node[above]{$$}(E)
+(B') edge[>->] node[right]{$$} (E);
+\end{tikzpicture}
+\]
+\end{thm}
+\begin{proof}
+Apply Shulman's result to $\lM \bold{onicSp(Csp(C))}$ to obtain $H(\lM \bold{onicSp(Csp(C))} = \bold{MonicSp(Csp(C))}$. 
+\end{proof}
+\noindent
+By duality, we also have the following theorem.
+
+
+\begin{thm}
+Let $\bold{C}$ be a topos. Then $\bold{EpicCsp(Sp(C))}$ is a symmetric monoidal bicategory with objects as objects of $\bold{C}$, morphisms as spans in $\bold{C}$, and 2-morphisms as isomorphism classes of cospans of spans such that morphisms of the cospan in the middle are epic, as in the following diagram.
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b$};
+\node (A) at (1,0) {$a$};
+\node (B') at (2,0) {$b'$};
+\node (C') at (3,0) {$c$};
+\node (E) at (2,-1) {$b''$};
+\path[->,font=\scriptsize,>=angle 90]
+(B')edge node[above]{$$}(A)
+(E)edge node[above]{$$}(A)
+(E)edge node[above]{$$}(C')
+(B)edge node[above]{$$}(C')
+(B) edge node[above]{$$} (A)
+(B) edge[->>] node[left]{$$} (B')
+(E) edge[->>] node[right]{$$} (B')
+(B') edge node[left]{$$} (C');
+\end{tikzpicture}
+\]
+Vertical composition is given by taking pushouts of cospans that line up vertically and horizontal composition is given by taking pullbacks of spans that line up horizontally. The monoidal structure is given by taking products component wise, namely if $f \colon a \to c$ and $g \colon a^\prime \to c^\prime$ are given by 
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a$};
+\node (B) at (2,1) {$b$};
+\node (C) at (3,1) {$c$};
+\node (D) at (0,1) {$f=$};
+\node (A') at (0,0) {$g=$};
+\node (B') at (1,0) {$a'$};
+\node (C') at (2,0) {$b'$};
+\node (D') at (3,0) {$c'$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A)
+(B)edge node[above]{$$}(C)
+(C') edge node[above]{$$} (B')
+(C')edge node[above]{$$}(D');
+\end{tikzpicture}
+\]
+then $f \times g \colon a \times a' \to c \times c'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (1,1) {$a \times a'$};
+\node (B) at (3,1) {$b \times b'$};
+\node (C) at (5,1) {$c \times c'$};
+\node (D) at (0,1) {$f \times g=$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$$} (A)
+(B)edge node[above]{$$}(C);
+\end{tikzpicture}
+\]
+Given two 2-morphisms $\alpha \colon f \rightarrow g$ and $\beta \colon f' \rightarrow g'$
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1}$};
+\node (A') at (1,0) {$a_{1}$};
+\node (B') at (2,0) {$b_{1}'$};
+\node (C') at (3,0) {$c_{1}$};
+\node (E) at (2,-1) {$b_{1}''$};
+\node (Z) at (0,0) {$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B')edge node[above]{$$}(A')
+(B')edge node[above]{$$}(C')
+(B)edge node[above]{$$}(A')
+(B)edge node[above]{$$}(C')
+(B) edge[->>] node[left]{$$} (B')
+(B)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(A')
+(E) edge[->>] node[right]{$$} (B');
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{2}$};
+\node (A') at (1,0) {$a_{2}$};
+\node (B') at (2,0) {$b_{2}'$};
+\node (C') at (3,0) {$c_{2}$};
+\node (E) at (2,-1) {$b_{2}''$};
+\node (Z) at (0,0) {$\beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B')edge node[above]{$$}(A')
+(B')edge node[above]{$$}(C')
+(B)edge node[above]{$$}(A')
+(B)edge node[above]{$$}(C')
+(B) edge[->>] node[left]{$$} (B')
+(B)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(A')
+(E) edge[->>] node[right]{$$} (B');
+\end{tikzpicture}
+\]
+respectively, then $\alpha \otimes \beta = \alpha \times \beta \colon f \times f' \to g \times g'$ is given by
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (B) at (2,1) {$b_{1} \times b_{2}$};
+\node (A') at (0,0) {$a_{1} \times a_{2}$};
+\node (B') at (2,0) {$b_{1}'\times b_{2}'$};
+\node (C') at (4,0) {$c_{1}\times c_{2}$};
+\node (E) at (2,-1) {$b_{1}'' \times b_{2}''$};
+\node (Z) at (-1.5,0) {$\alpha \otimes \beta = \alpha \times \beta =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B')edge node[above]{$$}(A')
+(B')edge node[above]{$$}(C')
+(B)edge node[above]{$$}(A')
+(B)edge node[above]{$$}(C')
+(B) edge[->>] node[left]{$$} (B')
+(B)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(C')
+(E)edge node[above]{$$}(A')
+(E) edge[->>] node[right]{$$} (B');
+\end{tikzpicture}
+\]
+\end{thm}
+
+\begin{proof}
+Apply Shulman's result to $\lE \bold{picCsp(Sp(C))}$ to obtain $H(\lE \bold{picCsp(Sp(C))} = \bold{EpicCsp(Sp(C))}$. 
+\end{proof}
+
+
+
+\section{Compact closed material}
+
+\begin{defn}
+An $\bold{equivalence}$ of objects $A$ and $B$ in a bicategory is a pair of morphisms $f \colon A \to B$ and $g \colon B \to A$ together with invertible 2-morphisms $e \colon g \circ f \Rightarrow 1_{A}$ and $i \colon 1_{B} \Rightarrow f \circ g$.
+\end{defn}
+
+\begin{defn}
+An $\textbf{adjoint equivalence}$ is an equivalence such that the 2-morphisms $e$ and $i^{-1}$ entail that $g \dashv f$. ($g$ is left adjoint to $f$)
+\end{defn}
+
+\begin{defn}
+Given bicategories $\bold{C}$ and $\bold{D}$ and two functors $F \colon \bold{C} \to \bold{D}$ and $G \colon \bold{D} \to\bold{C}$, we say that $F$ and $G$ are \textbf{pseudoadjoint}  if for all $A \in \bold{C}$ and all $B \in \bold{D}$, we have that the categories $\Hom_{\bold{D}}(FA,B)$ and $\Hom_{\bold{C}}(A,GB)$ are adjoint equivalent pseudonaturally in $A$ and $B$.
+\end{defn}
+
+\begin{defn}
+A symmetric monoidal bicategory is $\bold{closed}$ if for every object $A$, the functor $- \otimes A$ has a right pseudoadjoint.
+\end{defn}
+
+\begin{defn}
+A symmetric monoidal bicategory is $\textbf{compact closed}$ if every object has a pseudoadjoint.
+\end{defn}
+
+%Let $X$ be an object of $\bold{C}$ and denote by $X^*$ the dual object of $X$. We want a unit and counit given respectively %by
+%$$\eta \colon I \to X^* \otimes X$$
+%$$\epsilon \colon X \otimes X^* \to I$$
+%that together satisfy the two triangle equations given by
+%\[
+%\begin{tikzpicture}[scale=1.5]
+%\node (A) at (.25,1) {$X \otimes I$};
+%\node (B) at (2,1) {$X \otimes (X^* \otimes X)$};
+%\node (C) at (4,1) {$(X \otimes X^*) \otimes X$};
+%\node (E) at (4,0) {$I \otimes X$};
+%\node (F) at (4,-1) {$X$};
+%\node (D) at (-1,1) {$X$};
+%\path[->,font=\scriptsize,>=angle 90]
+%(D) edge node[above]{$\rho$} (A)
+%(A) edge node[above]{$1 \otimes \eta$} (B)
+%(B) edge node[above]{$\alpha$} (C)
+%(C) edge node[right]{$\epsilon \otimes 1$} (E)
+%(E) edge node[right]{$\ell$} (F)
+%(D)edge node[above]{$1$}(F);
+%\end{tikzpicture}
+%\]
+%and
+%\[
+%\begin{tikzpicture}[scale=1.5]
+%\node (A) at (.25,1) {$I \otimes X^*$};
+%\node (B) at (2,1) {$(X^* \otimes X) \otimes X^*$};
+%\node (C) at (4,1) {$X^* \otimes (X \otimes X^*)$};
+%\node (E) at (4,0) {$X^* \otimes I$};
+%\node (F) at (4,-1) {$X^*$};
+%\node (D) at (-1,1) {$X^*$};
+%\path[->,font=\scriptsize,>=angle 90]
+%(D) edge node[above]{$\ell$} (A)
+%(A) edge node[above]{$\epsilon \otimes 1$} (B)
+%(B) edge node[above]{$\alpha$} (C)
+%(C) edge node[right]{$1 \otimes \eta$} (E)
+%(E) edge node[right]{$\rho$} (F)
+%(D)edge node[above]{$1$}(F);
+%\end{tikzpicture}
+%\]
+%Actually, this is only the requirements for a mere category. We need the categorified version of these equations. 
+We want every object $A$ to be equipped with a \textbf{weak dual}, which is an object $A^*$ equipped with two 1-morphisms $i_{A} \colon I \to A \otimes A^*$ and $e_{A} \colon A^* \otimes A \to I$, the unit and counit, respectively, and two 2-isomorphisms
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (.25,1) {$I \otimes A^*$};
+\node (B) at (2,1) {$(A^* \otimes A) \otimes A^*$};
+\node (C) at (4,1) {$A^* \otimes (A \otimes A^*)$};
+\node (E) at (4,0) {$A^* \otimes I$};
+\node (F) at (4,-1) {$A^*$};
+\node (D) at (-1,1) {$A^*$};
+\node (G) at (2.75,0.25) {$\theta \Downarrow$};
+\path[->,font=\scriptsize,>=angle 90]
+(D) edge node[above]{$\ell^{-1}$} (A)
+(A) edge node[above]{$\epsilon \otimes 1$} (B)
+(B) edge node[above]{$\alpha$} (C)
+(C) edge node[right]{$1 \otimes \eta$} (E)
+(E) edge node[right]{$\rho$} (F)
+(D)edge node[above]{$1$}(F);
+\end{tikzpicture}
+\]
+and
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (.25,1) {$A \otimes I$};
+\node (B) at (2,1) {$A \otimes (A^* \otimes A)$};
+\node (C) at (4,1) {$(A \otimes A^*) \otimes A$};
+\node (E) at (4,0) {$I \otimes A$};
+\node (F) at (4,-1) {$A$};
+\node (D) at (-1,1) {$A$};
+\node (G) at (2.75,0.25) {$\zeta \Downarrow$};
+\path[->,font=\scriptsize,>=angle 90]
+(D) edge node[above]{$\rho^{-1}$} (A)
+(A) edge node[above]{$1 \otimes \eta$} (B)
+(B) edge node[above]{$\alpha^{-1}$} (C)
+(C) edge node[right]{$\epsilon \otimes 1$} (E)
+(E) edge node[right]{$\ell$} (F)
+(D)edge node[above]{$1$}(F);
+\end{tikzpicture}
+\]
+such that the following \emph{
+	 equation} holds:
+\begin{center}
+\[
+\begin{tikzpicture}[scale=1.0]
+\node (A) at (0,0) {$I$};
+\node (B) at (-2.5,-1) {$A \otimes A^*$};
+\node (C) at (2.5,-1) {$A \otimes A^*$};
+\node (D) at (0,-3) {$I \otimes I$};
+\node (E) at (-2.5,-4) {$I \otimes (A \otimes A^*)$};
+\node (F) at (2.5,-4) {$(A \otimes A^*) \otimes I$};
+\node (G) at (0,-6) {$(A \otimes A^*) \otimes (A \otimes A^*)$};
+\node (H) at (-5,-6) {$(I \otimes A) \otimes A^*$};
+\node (I) at (5,-6) {$A \otimes (A^* \otimes I)$};
+\node (J) at (-2.5,-8) {$((A \otimes A^*) \otimes A) \otimes A^*$};
+\node (K) at (2.5,-8) {$A \otimes (A^* \otimes (A \otimes A^*))$};
+\node (L) at (-2,-10) {$(A \otimes (A^* \otimes A)) \otimes A^*$};
+\node (M) at (2,-10) {$A \otimes ((A^* \otimes A) \otimes A^*)$};
+\node (N) at (-2,-12) {$(A \otimes I) \otimes A^*$};
+\node (O) at (2,-12) {$A \otimes (I \otimes A^*)$};
+\node (P) at (0,-14) {$A \otimes A^*$};
+\node (Q) at (-1.25,-2) {$\cong$};
+\node (R) at (1.25,-2) {$\cong$};
+\node (S) at (0,-4.5) {$\cong$};
+\node (T) at (-3,-3) {$\Downarrow \lambda^{-1}$};
+\node (U) at (3,-3) {$\Downarrow \rho$};
+\node (V) at (-2.5,-6) {$\cong$};
+\node (W) at (2.5,-6) {$\cong$};
+\node (X) at (0,-8) {$\Downarrow \pi_{2}^{-1}$};
+\node (Y) at (0,-11) {$\cong$};
+\node (Z) at (0,-13) {$\Downarrow \mu^{-1}$};
+\node (A1) at (-4.5,-9) {$\Downarrow \zeta \otimes 1_{A^*}$};
+\node (A2) at (4.5,-9) {$1_{A} \otimes \theta \Downarrow$};
+\node (A3) at (0,-15) {$=$};
+\node (A4) at (-5,-16) {$I$};
+\node (A5) at (5,-16) {$A \otimes A^*$};
+\path[->,font=\scriptsize,>=angle 90]
+(A) edge node[above]{$i$} (B)
+(A) edge node[above]{$i$} (C)
+(A) edge node[left]{$\ell^{-1}$} (D)
+(A) edge node[right]{$\rho^{-1}$} (D)
+(B) edge node[left]{$\ell^{-1}$}(E)
+(C) edge node[right]{$\rho^{-1}$} (F)
+(D) edge node[left=0.2cm,above=0.1cm]{$1_{I} \otimes i$} (E)
+(D) edge node[left=0.2cm,above=0.1cm]{$i \otimes 1_{I}$} (F)
+(E) edge node[right=0.1cm,below=0.3cm]{$i \otimes 1_{A \otimes A^*}$} (G)
+(F) edge node[right=0.1cm,below=0.3cm]{$1_{A \otimes A^*} \otimes i$} (G)
+(B) edge node[left=0.7cm,above=0.7cm]{$\ell^{-1} \otimes 1_{A^*}$} (H)
+(C) edge node[left=0.7cm,above=0.7cm]{$1_{A} \otimes r^{-1}$} (I)
+(E) edge node[below]{$a^{-1}$} (H)
+(F) edge node[below]{$a$} (I)
+(H) edge node[below=0.2cm,left=0.2cm]{$(i \otimes 1_{A}) \otimes 1_{A^*}$} (J)
+(G) edge node[below]{$a^{-1}$} (J)
+(I) edge node[above=0.2cm,right=0.2cm]{$1_{A} \otimes (1_{A^*} \otimes i)$} (K)
+(G) edge node[below]{$a$} (K)
+(J) edge node[below,left=0.1cm]{$a \otimes 1_{A^*}$} (L)
+(K) edge node[below,right=0.1cm]{$1_{A} \otimes a^{-1}$} (M)
+(L) edge node[above]{$a$} (M)
+(L) edge node[above,left]{$(1_{A} \otimes e) \otimes 1_{A^*}$} (N)
+(M) edge node[above,right]{$1_{A} \otimes (e \otimes 1_{A^*})$} (O)
+(N) edge node[above]{$a$} (O)
+(N) edge node[below=0.3cm]{$\rho \otimes 1_{A^*}$} (P)
+(O) edge node[below=0.3cm]{$1_{A} \otimes \ell$} (P)
+(B) edge [out=-170,in=-180] node [below=0.3cm,left=0.3cm] {$1_{A \otimes A^*}$} (P)
+(C) edge [in=-360,out=-370,] node [below=0.3cm,right=0.3cm] {$1_{A \otimes A^*}$} (P)
+(A4) edge node [above] {$i$} (A5);
+\end{tikzpicture}
+\]
+\end{center}
+We need to show this equation holds for $\bold{Csp(C)}$, $\bold{MonicSp(Csp(C))}$ and $\bold{Sp(Sp(C))}$.
+\section{Swallowtail equation for Sp(Sp(C))}
+The weak dual of an object $A$ is the object $A$, itself. The unit object with respect to the monoidal structure induced by $\times$ is given by $1$ where $1$ is a terminal object of $\bold{C}$. The map $i \colon 1 \to A \times A$ is given by the span
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$1$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$A \times A$};
+\node(Z) at (-1,0.5){$i =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$!$} (A)
+(B)edge node[above,right]{$\Delta$}(C);
+\end{tikzpicture}
+\]
+where $\Delta \colon A \to A \times A$ is the diagonal map. Similarly, the counit $\epsilon \colon A \times A \to 1$ is given by the span
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A \times A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$1$};
+\node(Z) at (-1,0.5){$\epsilon =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above,left]{$\Delta$} (A)
+(B)edge node[above]{$!$}(C);
+\end{tikzpicture}
+\]
+The left unitor $\ell \colon 1 \times A \to A$, right unitor $\rho \colon A \times 1 \to A$ and associator $\alpha \colon (A \times B) \times C \to A \times (B \times C)$ are given by the spans
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$1 \times A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$A$};
+\node(Z) at (-1,0.5){$\ell =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{${\ell^\prime}^{-1}$} (A)
+(B)edge node[above,right]{$1_{A}$}(C);
+\end{tikzpicture}
+\]
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A \times I$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$A$};
+\node(Z) at (-1,0.5){$\rho =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{${\rho^\prime}^{-1}$} (A)
+(B)edge node[above,right]{$1_{A}$}(C);
+\end{tikzpicture}
+\]
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$(A \times B) \times C$};
+\node (B) at (1,1) {$(A \times B) \times C$};
+\node (C) at (2,0) {$A \times (B \times C)$};
+\node(Z) at (-1,0.5){$\alpha =$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above,left]{$1_{(A \times B) \times C}$} (A)
+(B)edge node[above,right]{${\alpha^\prime}$}(C);
+\end{tikzpicture}
+\]
+respectively. Putting these all together in the context of $(\bold{C}, \times, 1)$, we can build the following diagram of spans
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$1 \times A$};
+\node (D) at (3,1) {$A \times A$};
+\node (E) at (4,0) {$(A \times A) \times A$};
+\node (F) at (5,1) {$(A \times A) \times A$};
+\node (G) at (6,0) {$A \times (A \times A)$};
+\node (H) at (7,1) {$A \times A$};
+\node (I) at (8,0) {$A \times 1$};
+\node (J) at (9,1) {$A$};
+\node (K) at (10,0) {$A$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$1_{A}$} (A)
+(B) edge node[above,right]{$\ell^{-1}$}(C)
+(D) edge node[above,left]{$! \times 1_{A}$} (C)
+(D) edge node[above,right]{$\Delta \times 1_{A}$} (E)
+(F) edge node[below,right]{$1_{(A \times A) \times A}$} (E)
+(F) edge node[above,right]{$\alpha^\prime$} (G)
+(H) edge node[above,left]{$1_{A} \times \Delta$} (G)
+(H) edge node[above,right]{$1_{A} \times !$} (I)
+(J) edge node[above,left]{${\rho^\prime}^{-1}$} (I)
+(J) edge node[above,right]{$1_{A}$} (K);
+\end{tikzpicture}
+\]
+We compose these spans by taking pullbacks. The resulting object at the top will be a limit of the above diagram, which can easily be seen to be isomorphic to the object $A$ which has canonical maps into the apex of each span, and any other such object must factor through $A$, as $A$ is one of the apices. To be explicit, we obtain the following diagram taking pullbacks:
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$1 \times A$};
+\node (D) at (3,1) {$A \times A$};
+\node (E) at (4,0) {$(A \times A) \times A$};
+\node (F) at (5,1) {$(A \times A) \times A$};
+\node (G) at (6,0) {$A \times (A \times A)$};
+\node (H) at (7,1) {$A \times A$};
+\node (I) at (8,0) {$A \times 1$};
+\node (J) at (9,1) {$A$};
+\node (K) at (10,0) {$A$};
+\node (L) at (2,2) {$A$};
+\node (M) at (4,2) {$A \times A$};
+\node (N) at (6,2) {$A \times A$};
+\node (O) at (8,2) {$A$};
+\node (P) at (3,3) {$A$};
+\node (Q) at (5,3) {$A \times A$};
+\node (R) at (7,3) {$A$};
+\node (S) at (4,4) {$A$};
+\node (T) at (6,4) {$A$};
+\node (U) at (5,5) {$A$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$1_{A}$} (A)
+(B) edge node[above,right]{$\ell^{-1}$}(C)
+(D) edge node[above,left]{$! \times 1_{A}$} (C)
+(D) edge node[above,right]{$\Delta \times 1_{A}$} (E)
+(F) edge node[below,right]{$1_{(A \times A) \times A}$} (E)
+(F) edge node[above,right]{$\alpha^\prime$} (G)
+(H) edge node[below,right]{$1_{A} \times \Delta$} (G)
+(H) edge node[above,right]{$1_{A} \times !$} (I)
+(J) edge node[above,left]{${\rho^\prime}^{-1}$} (I)
+(J) edge node[above,right]{$1_{A}$} (K)
+(L) edge node[above,left]{$1_{A}$} (B)
+(L) edge node[above,right]{$\Delta$} (D)
+(M) edge node[above,left]{$1_{A \times A}$} (D)
+(M) edge node[above,right]{$1_{A} \times \Delta$} (F)
+(N) edge node[below,right]{$1_{A} \times \Delta$} (F)
+(N) edge node[above,right]{$1_{A \times A}$} (H)
+(O) edge node[above,left]{$\Delta$} (H)
+(O) edge node[above,right]{$1_{A}$} (J)
+(P) edge node[above,left]{$1_{A}$} (L)
+(P) edge node[above,right]{$\Delta$} (M)
+(Q) edge node[above,left]{$1_{A \times A}$} (M)
+(Q) edge node[above,right]{$1_{A \times A}$} (N)
+(R) edge node[above,left]{$\Delta$} (N)
+(R) edge node[above,right]{$1_{A}$} (O)
+(S) edge node[above,left]{$1_{A}$} (P)
+(S) edge node[above,right]{$\Delta$} (Q)
+(T) edge node[above,left]{$\Delta$} (Q)
+(T) edge node[above,right]{$1_{A}$} (R)
+(U) edge node[above,left]{$1_{A}$} (S)
+(U) edge node[above,right]{$1_{A}$} (T);
+\end{tikzpicture}
+\]
+Every square in the above diagram is a pullback square. The 2-isomorphism $\theta$ is then given by the span of spans between the above span and the identity span on $A$ given by $A \xleftarrow{1_{A}} A \xrightarrow{1_{A}} A$ which gives us the following diagram
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$1 \times A$};
+\node (D) at (3,1) {$A \times A$};
+\node (E) at (4,0) {$(A \times A) \times A$};
+\node (F) at (5,1) {\colorbox{white}{$(A \times A) \times A$}};
+\node (G) at (6,0) {$A \times (A \times A)$};
+\node (H) at (7,1) {$A \times A$};
+\node (I) at (8,0) {$A \times 1$};
+\node (J) at (9,1) {$A$};
+\node (K) at (10,0) {$A$};
+\node (L) at (2,2) {$A$};
+\node (M) at (4,2) {$A \times A$};
+\node (N) at (6,2) {$A \times A$};
+\node (O) at (8,2) {$A$};
+\node (P) at (3,3) {$A$};
+\node (Q) at (5,3) {\colorbox{white}{$A \times A$}};
+\node (R) at (7,3) {$A$};
+\node (S) at (4,4) {$A$};
+\node (T) at (6,4) {$A$};
+\node (U) at (5,5) {$A$};
+\node (V) at (5,-2) {$A$};
+\node (W) at (5,-5) {$A$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$1_{A}$} (A)
+(B) edge node[above,right]{$\ell^{-1}$}(C)
+(D) edge node[above,left]{$! \times 1_{A}$} (C)
+(D) edge node[below,left]{$\Delta \times 1_{A}$} (E)
+(F) edge node[above,left]{$1_{(A \times A) \times A}$} (E)
+(F) edge node[above,right]{$\alpha^\prime$} (G)
+(H) edge node[below,right]{$1_{A} \times \Delta$} (G)
+(H) edge node[above,right]{$1_{A} \times !$} (I)
+(J) edge node[above,left]{${\rho^\prime}^{-1}$} (I)
+(J) edge node[above,right]{$1_{A}$} (K)
+(L) edge node[above,left]{$1_{A}$} (B)
+(L) edge node[above,right]{$\Delta$} (D)
+(M) edge node[above,left]{$1_{A \times A}$} (D)
+(M) edge node[below,left]{$\Delta \times 1_{A}$} (F)
+(N) edge node[below,right]{$\Delta \times 1_{A}$} (F)
+(N) edge node[above,right]{$1_{A \times A}$} (H)
+(O) edge node[above,left]{$\Delta$} (H)
+(O) edge node[above,right]{$1_{A}$} (J)
+(P) edge node[above,left]{$1_{A}$} (L)
+(P) edge node[above,right]{$\Delta$} (M)
+(Q) edge node[above,left]{$1_{A \times A}$} (M)
+(Q) edge node[above,right]{$1_{A \times A}$} (N)
+(R) edge node[above,left]{$\Delta$} (N)
+(R) edge node[above,right]{$1_{A}$} (O)
+(S) edge node[above,left]{$1_{A}$} (P)
+(S) edge node[above,right]{$\Delta$} (Q)
+(T) edge node[above,left]{$\Delta$} (Q)
+(T) edge node[above,right]{$1_{A}$} (R)
+(U) edge node[above,left]{$1_{A}$} (S)
+(U) edge node[above,right]{$1_{A}$} (T)
+(V) edge[dashed] node[above,right, near start]{$1_{A}$} (U)
+(V) edge node[above,left]{$1_{A}$} (W)
+(W) edge node[above,left]{$1_{A}$} (K)
+(W) edge node[above,left]{$1_{A}$} (A);
+\node (F) at (5,1) {\colorbox{white}{$(A \times A) \times A$}};
+\node (Q) at (5,3) {\colorbox{white}{$A \times A$}};
+\end{tikzpicture}
+\]
+The other 2-isomorphism $\zeta$ is given similarly, namely by composing the following diagram of spans
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$A \times 1$};
+\node (D) at (3,1) {$A \times A$};
+\node (E) at (4,0) {$A \times (A \times A)$};
+\node (F) at (5,1) {$A \times (A \times A)$};
+\node (G) at (6,0) {$(A \times A) \times A$};
+\node (H) at (7,1) {$A \times A$};
+\node (I) at (8,0) {$1 \times A$};
+\node (J) at (9,1) {$A$};
+\node (K) at (10,0) {$A$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$1_{A}$} (A)
+(B) edge node[above,right]{$\rho^{-1}$}(C)
+(D) edge node[above,left]{$1_{A} \times !$} (C)
+(D) edge node[above,right]{$1_{A} \times \Delta$} (E)
+(F) edge node[below,right]{$1_{A \times (A \times A)}$} (E)
+(F) edge node[above,right]{${\alpha^\prime}^{-1}$} (G)
+(H) edge node[above,left]{$\Delta \times 1_{A}$} (G)
+(H) edge node[above,right]{$! \times 1_{A}$} (I)
+(J) edge node[above,left]{${\ell^\prime}^{-1}$} (I)
+(J) edge node[above,right]{$1_{A}$} (K);
+\end{tikzpicture}
+\]
+to obtain the following diagram
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$A \times 1$};
+\node (D) at (3,1) {$A \times A$};
+\node (E) at (4,0) {$A \times (A \times A)$};
+\node (F) at (5,1) {$A \times (A \times A)$};
+\node (G) at (6,0) {$(A \times A) \times A$};
+\node (H) at (7,1) {$A \times A$};
+\node (I) at (8,0) {$1 \times A$};
+\node (J) at (9,1) {$A$};
+\node (K) at (10,0) {$A$};
+\node (L) at (2,2) {$A$};
+\node (M) at (4,2) {$A \times A$};
+\node (N) at (6,2) {$A \times A$};
+\node (O) at (8,2) {$A$};
+\node (P) at (3,3) {$A$};
+\node (Q) at (5,3) {$A \times A$};
+\node (R) at (7,3) {$A$};
+\node (S) at (4,4) {$A$};
+\node (T) at (6,4) {$A$};
+\node (U) at (5,5) {$A$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$1_{A}$} (A)
+(B) edge node[above,right]{$\rho^{-1}$}(C)
+(D) edge node[above,left]{$1_{A} \times !$} (C)
+(D) edge node[above,right]{$1_{A} \times \Delta$} (E)
+(F) edge node[below,right]{$1_{A \times (A \times A)}$} (E)
+(F) edge node[above,right]{${\alpha^\prime}^{-1}$} (G)
+(H) edge node[below,right]{$\Delta \times 1_{A}$} (G)
+(H) edge node[above,right]{$! \times 1_{A}$} (I)
+(J) edge node[above,left]{${\ell^\prime}^{-1}$} (I)
+(J) edge node[above,right]{$1_{A}$} (K)
+(L) edge node[above,left]{$1_{A}$} (B)
+(L) edge node[above,right]{$\Delta$} (D)
+(M) edge node[above,left]{$1_{A \times A}$} (D)
+(M) edge node[above,right]{$1_{A} \times \Delta$} (F)
+(N) edge node[below,right]{$1_{A} \times \Delta$} (F)
+(N) edge node[above,right]{$1_{A \times A}$} (H)
+(O) edge node[above,left]{$\Delta$} (H)
+(O) edge node[above,right]{$1_{A}$} (J)
+(P) edge node[above,left]{$1_{A}$} (L)
+(P) edge node[above,right]{$\Delta$} (M)
+(Q) edge node[above,left]{$1_{A \times A}$} (M)
+(Q) edge node[above,right]{$1_{A \times A}$} (N)
+(R) edge node[above,left]{$\Delta$} (N)
+(R) edge node[above,right]{$1_{A}$} (O)
+(S) edge node[above,left]{$1_{A}$} (P)
+(S) edge node[above,right]{$\Delta$} (Q)
+(T) edge node[above,left]{$\Delta$} (Q)
+(T) edge node[above,right]{$1_{A}$} (R)
+(U) edge node[above,left]{$1_{A}$} (S)
+(U) edge node[above,right]{$1_{A}$} (T);
+\end{tikzpicture}
+\]
+from which we can obtain the following span of spans
+\[
+\begin{tikzpicture}[scale=1.5]
+\node (A) at (0,0) {$A$};
+\node (B) at (1,1) {$A$};
+\node (C) at (2,0) {$A \times 1$};
+\node (D) at (3,1) {$A \times A$};
+\node (E) at (4,0) {$A \times (A \times A)$};
+\node (F) at (5,1) {\colorbox{white}{$A \times (A \times A)$}};
+\node (G) at (6,0) {$(A \times A) \times A$};
+\node (H) at (7,1) {$A \times A$};
+\node (I) at (8,0) {$1 \times A$};
+\node (J) at (9,1) {$A$};
+\node (K) at (10,0) {$A$};
+\node (L) at (2,2) {$A$};
+\node (M) at (4,2) {$A \times A$};
+\node (N) at (6,2) {$A \times A$};
+\node (O) at (8,2) {$A$};
+\node (P) at (3,3) {$A$};
+\node (Q) at (5,3) {\colorbox{white}{$A \times A$}};
+\node (R) at (7,3) {$A$};
+\node (S) at (4,4) {$A$};
+\node (T) at (6,4) {$A$};
+\node (U) at (5,5) {$A$};
+\node (V) at (5,-2) {$A$};
+\node (W) at (5,-5) {$A$};
+\path[->,font=\scriptsize,>=angle 90]
+(B) edge node[above]{$1_{A}$} (A)
+(B) edge node[above,right]{$\rho^{-1}$}(C)
+(D) edge node[above,left]{$1_{A} \times !$} (C)
+(D) edge node[below,left]{$1_{A} \times \Delta$} (E)
+(F) edge node[above,left]{$1_{A \times (A \times A)}$} (E)
+(F) edge node[above,right]{${\alpha^\prime}^{-1}$} (G)
+(H) edge node[below,right]{$\Delta \times 1_{A}$} (G)
+(H) edge node[above,right]{$! \times 1_{A}$} (I)
+(J) edge node[above,left]{${\ell^\prime}^{-1}$} (I)
+(J) edge node[above,right]{$1_{A}$} (K)
+(L) edge node[above,left]{$1_{A}$} (B)
+(L) edge node[above,right]{$\Delta$} (D)
+(M) edge node[above,left]{$1_{A \times A}$} (D)
+(M) edge node[below,left]{$1_{A} \times \Delta$} (F)
+(N) edge node[below,right]{$1_{A} \times \Delta$} (F)
+(N) edge node[above,right]{$1_{A \times A}$} (H)
+(O) edge node[above,left]{$\Delta$} (H)
+(O) edge node[above,right]{$1_{A}$} (J)
+(P) edge node[above,left]{$1_{A}$} (L)
+(P) edge node[above,right]{$\Delta$} (M)
+(Q) edge node[above,left]{$1_{A \times A}$} (M)
+(Q) edge node[above,right]{$1_{A \times A}$} (N)
+(R) edge node[above,left]{$\Delta$} (N)
+(R) edge node[above,right]{$1_{A}$} (O)
+(S) edge node[above,left]{$1_{A}$} (P)
+(S) edge node[above,right]{$\Delta$} (Q)
+(T) edge node[above,left]{$\Delta$} (Q)
+(T) edge node[above,right]{$1_{A}$} (R)
+(U) edge node[above,left]{$1_{A}$} (S)
+(U) edge node[above,right]{$1_{A}$} (T)
+(V) edge[dashed] node[above,right, near start]{$1_{A}$} (U)
+(V) edge node[above,left]{$1_{A}$} (W)
+(W) edge node[above,left]{$1_{A}$} (K)
+(W) edge node[above,left]{$1_{A}$} (A);
+\node (F) at (5,1) {\colorbox{white}{$A \times (A \times A)$}};
+\node (Q) at (5,3) {\colorbox{white}{$A \times A$}};
+\end{tikzpicture}
+\]
+which is the 2-isomorphism $\zeta$.
+\section{Applications}
+Graph rewrite stuff here?
+
+\section{Acknowledgements}
+Say nice things about Dr. Baez here :)
+
+\begin{thebibliography}{100}
+
+  %\bibitem{BCR} J.\ C.\ Baez, B.\ Coya and F.\ Rebro, Props in circuit theory, in preparation.
+
+
+ 
+
+% \bibitem{BF} J.\ C.\ Baez and B.\ Fong, A compositional
+%       framework for passive linear networks. Availabe as \href{http://arxiv.org/abs/1504.05625}{arXiv:1504.05625}.
+
+   %\bibitem{BFP} J.\ C.\ Baez, B.\ Fong and B.\ Pollard, A compositional
+%       framework for Markov processes, \emph{Jour. Math. Phys.} $\bold{57}$ (2016), 033301. Available as \href{http://%arxiv.org/abs/1508.06448}{arXiv:1508.06448}.
+
+%\bibitem{BP} J.\ C.\ Baez and B.\ Pollard, A compositional framework for chemical reaction networks, in preparation.
+
+%	\bibitem{Be} J.\ B\'enabou, Introduction to bicategories, in {\sl Reports
+%      of the Midwest Category Seminar}, Lecture Notes in Mathematics, vol.\ $\bold{47}$, Springer, 
+%	Berlin, 1967, pp.\ 1--77. 
+
+\bibitem{Cic} D.\ Cicala, Spans of cospans, in preparation.
+
+
+\bibitem{Cour} K.\ Courser, A bicategory of decorated cospans. Available at \href{https://arxiv.org/pdf/1605.08100v2.pdf}{arXiv:1605.08100}.
+
+\bibitem{Fiore} T.\ Fiore, Pseudo algebras and pseudo double categories, \emph{Journal of Homotopy and Related Structures} $\bold{2}$ (2007), 119--170. Available as \href{http://arxiv.org/abs/math/0608760}{arXiv:0608760}.
+
+
+
+   %\bibitem{Fon} B.\ Fong, Decorated cospans, \emph{Theory and Applications of Categories} $\bold{30}$ (2015), 1096--1120. %Available as \href{http://arxiv.org/abs/1502.00872}{arXiv:1502.00872}.
+
+%   \bibitem{Gran} M.\ Grandis and R.\ Pare, Limits in double categories, \emph{Cahiers de Topologie et G\'{e}om\'{e}trie Diff\'{e}%rentielle Cat\'{e}goriques}, $\bold{40}$  (1999), 162--220. Available at \href{http://www.numdam.org/numdam-bin/feuilleter?%j=ctgdc}{http://www.numdam.org/numdam-bin/feuilleter?j=ctgdc}.
+
+
+   %\bibitem{Hoff} A.\ Hoffnung, Spans in 2-categories: a monoidal tricategory. Available as \href{http://arxiv.org/abs/1112.0560}%{arXiv:1112.0560}.
+
+%\bibitem{Lack} S.\ Lack, Limits for lax morphisms, \emph{Applied Categorical Structures} $\bold{30}$ (2005), 189--203. Available %at \href{http://maths.mq.edu.au/~slack/papers/talgl.pdf}{http://maths.mq.edu.au/$\sim$slack/papers/talgl.pdf}.
+
+   %\bibitem{Lerm} E.\ Lerman and D.\ Spivak, An algebra of open continuous time dynamical systems and networks. Available as %%\href{http://arxiv.org/abs/1602.01017}{arXiv:1602.01017}.
+
+
+%   \bibitem{ML} S.\ Mac Lane, {\sl Categories for the Working Mathematician},
+%     Springer, Berlin, 1998.
+
+   %\bibitem{Pol} B.\ Pollard, Open Markov processes: A compositional perspective on non-equilibrium steady states in biology, %%%\emph{Entropy} $\bold{18}$ (2016), 140. Available as \href{http://arxiv.org/abs/1601.00711}{arXiv:1601.00711}.
+
+%\bibitem{RSW} R.\ Rosebrugh, N.\ Sabadini and R.\ F.\ C.\ Walters, Generic commutative separable algebras and cospans of %graphs, \emph{Theory Appl. Categ.,} \textbf{15} (2005), 164--177. Available at \href{http:/.www.tac.mta.ca/tac/volumes/%15/6/15-06.pdf}{http:/.www.tac.mta.ca/tac/volumes/15/6/15-06.pdf}.
+
+\bibitem{Reb} F.\ Rebro, Constructing the bicategory Span$_{2}(\bold{C})$. Available as \href{https://arxiv.org/abs/1501.00792}{arXiv:1501.00792}.
+
+   \bibitem{Shul} M.\ Shulman, Constructing symmetric monoidal bicategories. Available as \href{http://arxiv.org/abs/1004.0993}{arXiv:1004.0993}.
+
+   \bibitem{Stay} M.\ Stay, Compact closed bicategories. Available as \href{http://arxiv.org/abs/1301.1053}{arXiv:1301.1053}.
+
+
+  
+
+
+	
+
+\end{thebibliography}
+
+
+
+\end{document}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

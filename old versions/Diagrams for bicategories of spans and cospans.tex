@@ -1,0 +1,291 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% BICATEGORY DIAGRAMS
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% MAP OF SPANS
+
+	\node (A) at (0,0) {$$};
+	\node (B) at (1,1) {$$};
+	\node (B') at (1,-1) {$$};
+	\node (C) at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	(B) edge node[above]{$$} (A)
+	(B') edge node[above]{$$} (A)
+	(B) edge node[above]{$$} (C)
+	(B') edge node[above]{$$} (C)
+	(B) edge node[left]{$$} (B');
+
+% MAP OF COSPANS
+
+	\node (A) at (0,0) {$$};
+	\node (B) at (1,1) {$$};
+	\node (B') at (1,-1) {$$};
+	\node (C) at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	(A) edge node[above]{$$} (B)
+	(A) edge node[above]{$$} (B')
+	(C) edge node[above]{$$} (B)
+	(C) edge node[above]{$$} (B')
+	(B) edge node[left]{$$} (B');
+
+% SPANS OF SPANS
+
+	\node (A) at (0,0) {$$};
+	\node (B) at (1,1) {$$};
+	\node (B') at (1,0) {$$};
+	\node (B'') at (1,-1) {$$};
+	\node (C) at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	(B) edge node[above]{$$} (A)
+	(B) edge node[above]{$$} (C)
+	(B') edge[->] node[left]{$$} (A)
+	(B') edge[->] node[right]{$$} (C)
+	(B'') edge node[left]{$$} (A)
+	(B'') edge node[left]{$$} (C)
+	(B') edge node[left]{$$} (B)
+	(B') edge node[right]{$$} (B'');
+
+% COSPANS OF COSPANS
+
+	\node (A) at (0,0) {$ $};
+	\node (B) at (1,1) {$ $};
+	\node (B') at (1,0) {$ $};
+	\node (B'') at (1,-1) {$ $};
+	\node (C) at (2,0) {$ $};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	(A) edge node[above]{$ $} (B)
+	(A) edge node[above]{$ $} (B')
+	(A) edge[->] node[left]{$ $} (B'')
+	(C) edge[->] node[right]{$ $} (B)
+	(C) edge node[left]{$ $} (B')
+	(C) edge node[left]{$ $} (B'')
+	(B) edge node[left]{$ $} (B')
+	(B'') edge node[right]{$ $} (B');
+
+
+% MONIC SPANS OF COSPANS
+
+	\node (A) at (0,0) {$$};
+	\node (B) at (1,1) {$$};
+	\node (B') at (1,0) {$$};
+	\node (B'') at (1,-1) {$$};
+	\node (C) at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	(A) edge node[above]{$$} (B)
+	(A) edge node[above]{$$} (B')
+	(A) edge node[above]{$$} (B'')
+	(C) edge node[above]{$$} (B)
+	(C) edge node[above]{$$} (B')
+	(C) edge node[left]{$$} (B'')
+	(B') edge[>->] node[right]{$$} (B)
+	(B') edge[>->] node[left]{$$} (B'');
+
+
+% EPIC COSPANS OF SPANS
+
+	\node (A) at (0,0) {$$};
+	\node (B) at (1,1) {$$};
+	\node (B') at (1,0) {$$};
+	\node (B'') at (1,-1) {$$};
+	\node (C) at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	(B) edge node[above]{$$} (A)
+	(B) edge node[left]{$$} (C)
+	(B') edge node[left]{$$} (A)
+	(B') edge node[right]{$$} (C)
+	(B'') edge node[left]{$$} (A)
+	(B'') edge node[left]{$$} (C)
+	(B) edge[->>] node[left]{$$} (B')
+	(B'') edge[->>] node[right]{$$} (B');
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% DOUBLE CATEGORY DIAGRAMS
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% MAPS OF SPANS
+
+	\node (A) at (0,2) {$$};
+	\node (A') at (0,1) {$$};
+	\node (B) at (1,2) {$$};
+	\node (B') at (1,1) {$$};
+	\node (C) at (2,2) {$$};
+	\node (C') at (2,1) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	% horizontal arrows
+	(B) edge node[above]{$$} (A)
+	(B) edge node[above]{$$} (C)
+	(B') edge node[above]{$$} (A')
+	(B') edge node[above]{$$} (C')
+	% vertical arrows
+	(A) edge node[left]{$$} (A')
+	(B) edge node[left]{$$} (B')
+	(C) edge node[left]{$$} (C');	
+
+% MAPS OF COSPANS
+
+	\node (A) at (0,2) {$$};
+	\node (A') at (0,1) {$$};
+	\node (B) at (1,2) {$$};
+	\node (B') at (1,1) {$$};
+	\node (C) at (2,2) {$$};
+	\node (C') at (2,1) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	% horizontal arrows
+	(A) edge node[above]{$$} (B)
+	(C) edge node[above]{$$} (B)
+	(A') edge node[above]{$$} (B')
+	(C') edge node[above]{$$} (B')
+	% vertical arrows
+	(A) edge node[left]{$$} (A')
+	(B) edge node[left]{$$} (B')
+	(C) edge node[left]{$$} (C');	
+
+
+% SPANS OF SPANS
+
+	\node (A) at (0,2) {$$};
+	\node (A') at (0,1) {$$};
+	\node (A'') at (0,0) {$$};
+	\node (B) at (1,2) {$$};
+	\node (B') at (1,1) {$$};
+	\node (B'') at (1,0) {$$};
+	\node (C) at (2,2) {$$};
+	\node (C') at (2,1) {$$};
+	\node (C'') at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	% horizontal arrows
+	(B) edge node[above]{$$} (A)
+	(B) edge node[above]{$$} (C)
+	(B') edge node[above]{$$} (A')
+	(B') edge node[above]{$$} (C')
+	(B'') edge node[above]{$$} (A'')
+	(B'') edge node[above]{$$} (C'')
+	% vertical arrows
+	(A') edge node[left]{$$} (A)
+	(A') edge node[left]{$$} (A'')
+	(B') edge node[left]{$$} (B)
+	(B') edge node[left]{$$} (B'')
+	(C') edge node[left]{$$} (C)
+	(C') edge node[left]{$$} (C'');	
+
+
+% COSPANS OF COSPANS
+
+	\node (A) at (0,2) {$$};
+	\node (A') at (0,1) {$$};
+	\node (A'') at (0,0) {$$};
+	\node (B) at (1,2) {$$};
+	\node (B') at (1,1) {$$};
+	\node (B'') at (1,0) {$$};
+	\node (C) at (2,2) {$$};
+	\node (C') at (2,1) {$$};
+	\node (C'') at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	% horizontal arrows
+	(A) edge node[above]{$$} (B)
+	(A') edge node[above]{$$} (B')
+	(A'') edge node[above]{$$} (B'')
+	(C) edge node[above]{$$} (B)
+	(C') edge node[above]{$$} (B')
+	(C'') edge node[above]{$$} (B'')
+	% vertical arrows
+	(A) edge node[left]{$$} (A')
+	(A'') edge node[left]{$$} (A')
+	(B) edge node[left]{$$} (B')
+	(B'') edge node[left]{$$} (B')
+	(C) edge node[left]{$$} (C')
+	(C'') edge node[left]{$$} (C');	
+
+
+% MONIC SPANS OF COSPANS
+
+	\node (A) at (0,2) {$$};
+	\node (A') at (0,1) {$$};
+	\node (A'') at (0,0) {$$};
+	\node (B) at (1,2) {$$};
+	\node (B') at (1,1) {$$};
+	\node (B'') at (1,0) {$$};
+	\node (C) at (2,2) {$$};
+	\node (C') at (2,1) {$$};
+	\node (C'') at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	% horizontal arrows
+	(A) edge node[above]{$$} (B)
+	(A') edge node[above]{$$} (B')
+	(A'') edge node[above]{$$} (B'')
+	(C) edge node[above]{$$} (B)
+	(C') edge node[above]{$$} (B')
+	(C'') edge node[above]{$$} (B'')
+	% vertical arrows
+	(A') edge node[left]{$\cong$} (A)
+	(A') edge node[left]{$\cong$} (A'')
+	(B') edge[>->] node[left]{$$} (B)
+	(B') edge[>->] node[left]{$$} (B'')
+	(C') edge node[left]{$\cong$} (C)
+	(C') edge node[left]{$\cong$} (C'');
+
+
+% EPIC COSPANS OF SPANS
+
+	\node (A) at (0,2) {$$};
+	\node (A') at (0,1) {$$};
+	\node (A'') at (0,0) {$$};
+	\node (B) at (1,2) {$$};
+	\node (B') at (1,1) {$$};
+	\node (B'') at (1,0) {$$};
+	\node (C) at (2,2) {$$};
+	\node (C') at (2,1) {$$};
+	\node (C'') at (2,0) {$$};
+	%
+	\path[->,font=\scriptsize,>=angle 90]
+	% horizontal arrows
+	(B) edge node[above]{$$} (A)
+	(B) edge node[above]{$$} (C)
+	(B') edge node[above]{$$} (A')
+	(B') edge node[above]{$$} (C')
+	(B'') edge node[above]{$$} (A'')
+	(B'') edge node[above]{$$} (C'')
+	% vertical arrows
+	(A) edge node[left]{$\cong$} (A')
+	(A'') edge node[left]{$\cong$} (A')
+	(B) edge[->>] node[left]{$$} (B')
+	(B'') edge[->>] node[left]{$$} (B')
+	(C) edge node[left]{$\cong$} (C')
+	(C'') edge node[left]{$\cong$} (C');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% FROBENIUS GRAPH DIAGRAMS
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% MULITIPLICATION
+
+\draw[rounded corners] (0,0) rectangle (2,2);
+\fill[white] (-0.1,0.2) rectangle (0.1,1.8); 
+\fill[white] (1.9,0.2) rectangle (2.1,1.8);
+%
+\node (I1) at (0,1.6) {$\circ$};
+\node (I2) at (0,0.4) {$\circ$};
+\node (O1) at (2,1) {$\circ$};
+%
+\path[->]
+(I1) edge (O1)
+(I2) edge (O1);
